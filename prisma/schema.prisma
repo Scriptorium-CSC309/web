@@ -95,7 +95,7 @@ model CodeTemplate {
   title       String
   description String
   code        String
-  language    Int
+  language    String
   userId      Int
 
   tags CodeTemplateTag[]
