@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
+  isAdmin  Boolean
+
+  blogPosts       BlogPost[]
+  comments        Comment[]
+  codeTemplates   CodeTemplate[]
+  blogPostReports BlogPostReport[]
+  commentReports  CommentReport[]
+}
+
+model BlogPost {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  content     String
+  postedAt    DateTime
+  userId      Int
+  isHidden    Boolean  @default(false)
+
+  tags            BlogPostTag[]
+  comments        Comment[]
+  blogPostReports BlogPostReport[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id       Int      @id @default(autoincrement())
+  postedAt DateTime
+  userId   Int
+  postId   Int
+  content  String
+  isHidden Boolean  @default(false)
+
+  user           User            @relation(fields: [userId], references: [id])
+  blogPost       BlogPost        @relation(fields: [postId], references: [id])
+  commentReports CommentReport[]
+}
+
+model BlogPostReport {
+  id          Int      @id @default(autoincrement())
+  reporterId  Int
+  blogPostId  Int
+  explanation String
+  reportedAt  DateTime @default(now())
+
+  reporter User     @relation(fields: [reporterId], references: [id])
+  blogPost BlogPost @relation(fields: [blogPostId], references: [id])
+
+  @@index([blogPostId])
+}
+
+model CommentReport {
+  id          Int      @id @default(autoincrement())
+  reporterId  Int
+  commentId   Int
+  explanation String
+  reportedAt  DateTime @default(now())
+
+  reporter User    @relation(fields: [reporterId], references: [id])
+  comment  Comment @relation(fields: [commentId], references: [id])
+
+  @@index([commentId])
+}
+
+model BlogPostTag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  blogPosts BlogPost[]
+}
+
+model CodeTemplateTag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  codeTemplates CodeTemplate[]
+}
+
+model CodeTemplate {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  code        String
+  language    String
+  userId      Int
+
+  tags CodeTemplateTag[]
+  user User              @relation(fields: [userId], references: [id])
+}
