@@ -71,7 +71,7 @@ CREATE TABLE "CodeTemplate" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "code" TEXT NOT NULL,
-    "language" INTEGER NOT NULL,
+    "language" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     CONSTRAINT "CodeTemplate_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
