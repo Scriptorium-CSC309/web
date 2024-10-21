@@ -4,7 +4,7 @@ import { promises as fs } from "fs";
 import { spawn, SpawnOptionsWithoutStdio } from "child_process";
 import { randomBytes } from 'crypto';
 
-// helpers for the execute use case
+// This file contains helpers for the execute use case.
 
 type SpawnArgs = {
     command: string;
@@ -63,6 +63,10 @@ export async function spawnHelper(
     });
 }
 
+/**
+ * Return a (very likely to be) unique file name. 
+ * Used by other functions to prevent naming conflicts for temp files.
+ */
 export function getUniqueFileName() {
     const timestamp = Date.now();
     const randomStr = randomBytes(8).toString('hex'); // Generates a 16-character hex string
