@@ -101,5 +101,6 @@ export async function cleanupFile(path: string): Promise<void> {
         console.log(`File ${path} deleted successfully.`);
     } catch (error) {
         console.log(error);
+        throw error;
     }
 }
