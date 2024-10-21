@@ -1,10 +1,11 @@
 import { ExecutionOptions, ExecutionResult, Executor } from "./executor";
 import { spawn } from "child_process";
-import { cleanupFile, createTempFile } from "./utils";
+import { cleanupFile, createTempFile, getUniqueFileName } from "./utils";
 
 export class PythonExecutor implements Executor {
     async execute(options: ExecutionOptions): Promise<ExecutionResult> {
-        const tempFilePath = await createTempFile("py", options.code);
+        const tempFileName = getUniqueFileName() + ".py";
+        const tempFilePath = await createTempFile(tempFileName, options.code);
 
         return await new Promise<ExecutionResult>((resolve, reject) => {
             // Spawn the Python process

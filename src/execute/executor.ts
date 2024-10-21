@@ -1,6 +1,11 @@
 // Defines components of the executor use case's interface that interacts with the controller in ~/pages/api/execute.
 
 /**
+ * Set of supporting languages for code execution.
+ */
+export const supportedLanguages = new Set<string>(["Python", "C"]); // TODO: add C++, Java, and JavaScript
+
+/**
  * Represents the options required to execute a piece of code.
  */
 export interface ExecutionOptions {

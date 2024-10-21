@@ -1,5 +1,5 @@
 import { ExecutionResult } from "@/src/execute/executor";
-import { PythonExecutor } from "@/src/execute/python-executor";
+import { ExecutorFactory } from "@/src/execute/executor-factory";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = { message: string } | ExecutionResult;
@@ -9,12 +9,12 @@ export default async function handler(
     res: NextApiResponse<ResponseData>
 ) {
     let { language, code, stdin, timeout } = req.body;
-    if (!language || language != "Python") {
-        res.status(400).json({ message: "Only Python is supported right now" });
+    let executor = ExecutorFactory.fromLanguage(language);
+    if (!executor) {
+        res.status(400).json({ message: "The language is not supported." });
         return;
     }
 
-    let executor = new PythonExecutor();
     const execution_result = await executor.execute({
         code: code,
         stdin: stdin,
