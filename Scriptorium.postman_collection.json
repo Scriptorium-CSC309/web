@@ -209,7 +209,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "",
+									"raw": "{\n    \"language\": \"C++\",\n    \"code\": \"#include <iostream>\\nusing namespace std;\\n\\nint main() {\\n  int x;\\n // Type a number and press enter\\n  cin >> x; // Get user input from the keyboard\\n  cout << \\\"Your number is: \\\" << x;\\n  return 0;\\n}\",\n    \"stdin\": \"5\",\n    \"timeout\": 5\n}\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -238,7 +238,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "",
+									"raw": "{\n    \"language\": \"C++\",\n    \"code\": \"throw std::runtime_error(\\\"Crash: runtime error occurred!\\\");\",\n    \"stdin\": \"\",\n    \"timeout\": 5\n}",
 									"options": {
 										"raw": {
 											"language": "json"
