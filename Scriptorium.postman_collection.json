@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "4b11f266-5aa6-4bd8-bf87-7fc2f856b995",
+		"name": "Scriptorium",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16580470"
+	},
+	"item": [
+		{
+			"name": "execute",
+			"item": [
+				{
+					"name": "Python",
+					"item": [
+						{
+							"name": "execute-success",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"Python\",\n    \"code\": \n  \"import sys\\n\\nfor line in sys.stdin:\\n    print(f'Hello, {line.strip()}')\"\n  ,\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"C\",\n    \"code\": \"#include <stdio.h>\\n\\nint main() {\\n    int result = 1 / 0;\\n    printf(\\\"Result: %d\\\\n\\\", result);\\n    return 0;\\n}\",\n    \"stdin\": \"\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "C",
+					"item": [
+						{
+							"name": "execute-success",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"C\",\n    \"code\": \"#include <stdio.h>\\n#include <string.h>\\n\\nint main() {\\n    char input[100];\\n    if (fgets(input, sizeof(input), stdin) != NULL) {\\n        // Remove newline character if present\\n        size_t len = strlen(input);\\n        if (len > 0 && input[len - 1] == '\\\\n') {\\n            input[len - 1] = '\\\\0';\\n        }\\n        printf(\\\"Hello, %s\\\\n\\\", input);\\n    }\\n    return 0;\\n}\",\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"Python\",\n    \"code\": \"print(1 / 0)\",\n    \"stdin\": \"\",\n    \"timeout\": 5\n}\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "JS",
+					"item": [
+						{
+							"name": "execute-success",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"JS\",\n    \"code\": \"const readline = require('readline');\\n\\nconst rl = readline.createInterface({\\n  input: process.stdin,\\n  output: process.stdout,\\n  terminal: false\\n});\\n\\nrl.on('line', (line) => {\\n   console.log(`Hello, ${line.trim()}`);\\n});\\n\\nrl.on('end', () => {\\n    process.exit(0);\\n });\",\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"JS\",\n    \"code\": \"console.log('expect an error in stderr'); throw new Error('ERROR');\",\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
