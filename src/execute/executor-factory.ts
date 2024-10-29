@@ -2,6 +2,8 @@
 
 import { CExecutor } from "./C-executor";
 import { PythonExecutor } from "./python-executor";
+import { JSExecutor } from "./js-executor";
+import { CppExecutor } from "./C++-executer";
 
 export class ExecutorFactory {
     /**
@@ -14,6 +16,10 @@ export class ExecutorFactory {
                 return new PythonExecutor();
             case "C":
                 return new CExecutor();
+            case "JS":
+                return new JSExecutor();
+            case "C++":
+                return new CppExecutor();
             default:
                 return null;
         }
