@@ -1,9 +1,17 @@
-// pages/api/auth/signup.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
 import { hashPassword } from "@/src/auth/utils";
+import Joi from "joi";
 
-const saltRounds = 10;
+const NUM_AVATARS = Number(process.env.NUM_AVATARS!);
+
+// Joi schema for request body validation
+const signupSchema = Joi.object({
+  name: Joi.string().min(1).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  avatarId: Joi.number().integer().min(1).max(NUM_AVATARS).optional(),
+});
 
 export default async function signup(
     req: NextApiRequest,
@@ -14,7 +22,11 @@ export default async function signup(
         return;
     }
 
-    const { name, email, password } = req.body;
+    const { error, value: validatedData } = signupSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+    const { name, email, password, avatarId = 1 } = validatedData;
 
     if (!name || !email || !password) {
         return res.status(400).json({ error: "Missing required fields" });
@@ -37,6 +49,7 @@ export default async function signup(
                 email,
                 password: hashedPassword,
                 isAdmin: false,  // TODO: figure out how to give admin permission safely
+                avatarId: avatarId
             },
         });
         return res.status(201).json({ message: "User signed up successfully" });
