@@ -44,7 +44,7 @@ export default async function login(
 
     // Create JWT
     const token = jwt.sign(
-        { id: user.id, email: user.email },
+        { id: user.id, isAdmin: user.isAdmin },
         jwtSecret,
         { expiresIn: "1h" }
     );
