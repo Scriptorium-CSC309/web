@@ -1,16 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
-
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const Joi = require("joi");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import Joi from "joi";
 
 // Set JWT secret from environment variable
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) {
-    console.error("FATAL ERROR: JWT_SECRET is not defined.");
-    process.exit(1); // Exit the process if JWT_SECRET is missing
-}
+const jwtSecret = process.env.JWT_SECRET!;
 
 // Joi schema for validation
 const schema = Joi.object({
