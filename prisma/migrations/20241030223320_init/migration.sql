@@ -4,7 +4,8 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "isAdmin" BOOLEAN NOT NULL
+    "isAdmin" BOOLEAN NOT NULL,
+    "avatarId" INTEGER NOT NULL
 );
 
 -- CreateTable
