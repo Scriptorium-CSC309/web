@@ -3,6 +3,9 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+/**
+ * Authenticated requests are passed on to handlers with data as specified by AuthenticatedRequest.
+ */
 interface AuthenticatedRequest extends NextApiRequest {
     user: {
         userId: string;
@@ -10,6 +13,12 @@ interface AuthenticatedRequest extends NextApiRequest {
     };
 }
 
+/**
+ * A Functional decorator to enable authorization and authentication.
+ * @param handler The handler to add auth to.
+ * @param options Options for the authorization and authentication.
+ * @returns A modified handler with authorization and authentication implemented as specified by options.
+ */
 export function withAuth<T>(
     handler: NextApiHandler<T>,
     options?: { admin?: boolean }
