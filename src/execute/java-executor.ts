@@ -12,7 +12,7 @@ export class JavaExecutor implements Executor {
         //create a temp file with the code to run
         const uniqueFileName = getUniqueFileName();
         const javaFileName = `${uniqueFileName}.java`;
-        const classFileName = `${uniqueFileName}.class`;
+        const classFileName = uniqueFileName;
         const javaFilePath = await createTempFile(javaFileName, options.code);
         try{
             //compile the java code
@@ -38,7 +38,14 @@ export class JavaExecutor implements Executor {
                 stdout: runResult.stdout,
                 stderr: runResult.stderr,
             };
-        } finally {
+        } catch (error) {
+            console.error(`Error running java code: ${error}`);
+            return {
+                stdout: "",
+                stderr: "Unexpected Error: ${error}",
+            };
+        }
+        finally {
             //cleanup the temp files
             await cleanupFile(javaFilePath);
             await cleanupFile(`${javaFilePath}.class`);
