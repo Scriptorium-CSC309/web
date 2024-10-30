@@ -22,10 +22,10 @@ export class JavaExecutor implements Executor {
             });
             if (compileResult.code !== 0) {
                 //if compilation failed, return the error message and stop execution
+                await cleanupFile(javaFilePath);
                 return {
                     stdout: compileResult.stdout,
                     stderr: compileResult.stderr,
-
                 };
             }
             //otherwise run the compiled java code
