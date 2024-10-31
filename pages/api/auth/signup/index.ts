@@ -2,15 +2,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
 import { hashPassword } from "@/src/auth/utils";
 import Joi from "joi";
-
-const NUM_AVATARS = Number(process.env.NUM_AVATARS!);
+import { NUM_AVATARS } from "@/src/constants";
 
 // Joi schema for request body validation
 const signupSchema = Joi.object({
-  name: Joi.string().min(1).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  avatarId: Joi.number().integer().min(1).max(NUM_AVATARS).optional(),
+    name: Joi.string().min(1).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+    avatarId: Joi.number().integer().min(1).max(NUM_AVATARS).optional(),
 });
 
 export default async function signup(
@@ -24,7 +23,7 @@ export default async function signup(
 
     const { error, value: validatedData } = signupSchema.validate(req.body);
     if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+        return res.status(400).json({ error: error.details[0].message });
     }
     const { name, email, password, avatarId = 1 } = validatedData;
 
@@ -48,8 +47,8 @@ export default async function signup(
                 name,
                 email,
                 password: hashedPassword,
-                isAdmin: false,  // TODO: figure out how to give admin permission safely
-                avatarId: avatarId
+                isAdmin: false, // TODO: figure out how to give admin permission safely
+                avatarId: avatarId,
             },
         });
         return res.status(201).json({ message: "User signed up successfully" });

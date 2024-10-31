@@ -1,8 +1,9 @@
 import { withAuth } from "@/src/auth/middleware";
-import saveCodeTemplateInteractor from "@/src/user/profile/update-profile";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { AuthenticatedRequest } from "@/src/auth/utils";
+import saveCodeTemplateInteractor from "@/src/code-template/save-code-template";
+import type { NextApiResponse } from "next";
 
-function handler(req: NextApiRequest, res: NextApiResponse) {
+function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     if (req.method === "GET") {
         // getProfileInteractor(req, res);
     } else if (req.method === "POST") {

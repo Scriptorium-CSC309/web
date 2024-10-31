@@ -3,8 +3,7 @@ import prisma from "@/prisma";
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest, hashPassword } from "@/src/auth/utils";
 import Joi from "joi";
-
-const NUM_AVATARS = Number(process.env.NUM_AVATARS!);
+import { NUM_AVATARS } from "@/src/constants";
 
 // Joi schema for request body validation
 const updateProfileSchema = Joi.object({
