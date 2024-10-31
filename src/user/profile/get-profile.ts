@@ -16,6 +16,7 @@ async function getProfileInteractor(
                 email: true,
                 avatarId: true,
                 isAdmin: true,
+                phoneNumber: true,
             },
         });
 

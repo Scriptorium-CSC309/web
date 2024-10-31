@@ -5,7 +5,8 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "isAdmin" BOOLEAN NOT NULL,
-    "avatarId" INTEGER NOT NULL
+    "avatarId" INTEGER NOT NULL,
+    "phoneNumber" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -95,6 +96,9 @@ CREATE TABLE "_CodeTemplateToCodeTemplateTag" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_phoneNumber_key" ON "User"("phoneNumber");
 
 -- CreateIndex
 CREATE INDEX "BlogPostReport_blogPostId_idx" ON "BlogPostReport"("blogPostId");

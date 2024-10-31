@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique
-  password String
-  isAdmin  Boolean
-  avatarId Int // Avatar ID between 1 and NUM_AVATARS
+  id          Int     @id @default(autoincrement())
+  name        String
+  email       String  @unique
+  password    String
+  isAdmin     Boolean
+  avatarId    Int // Avatar ID between 1 and NUM_AVATARS
+  phoneNumber String  @unique
 
   blogPosts       BlogPost[]
   comments        Comment[]
