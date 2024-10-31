@@ -10,7 +10,7 @@ const signupSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
     avatarId: Joi.number().integer().min(1).max(NUM_AVATARS).optional(),
-    phoneNumber: Joi.string().pattern(VALID_PHONE_NUMBER).optional(), // E.164 phone format
+    phoneNumber: Joi.string().pattern(VALID_PHONE_NUMBER).optional()
 });
 
 export default async function signup(
