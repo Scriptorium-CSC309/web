@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 /**
  * Authenticated requests are passed on to handlers with data as specified by AuthenticatedRequest.
  */
-interface AuthenticatedRequest extends NextApiRequest {
+export interface AuthenticatedRequest extends NextApiRequest {
     user: {
         userId: string;
         isAdmin: boolean;
@@ -40,7 +40,7 @@ export function withAuth<T>(
             const decoded = jwt.verify(token, JWT_SECRET) as any;
 
             (req as AuthenticatedRequest).user = {
-                userId: decoded.userId,
+                userId: decoded.id,
                 isAdmin: decoded.isAdmin,
             };
 
