@@ -1,6 +1,5 @@
-// utils/auth.ts
-
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
+import { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Hashes a plaintext password.
@@ -19,7 +18,25 @@ export const hashPassword = async (password: string): Promise<string> => {
  * @param hashedPassword - The hashed password to compare against.
  * @returns `true` if the passwords match, otherwise `false`.
  */
-export const verifyPassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+export const verifyPassword = async (
+    password: string,
+    hashedPassword: string
+): Promise<boolean> => {
     const isMatch = await bcrypt.compare(password, hashedPassword);
     return isMatch;
 };
+
+/**
+ * Authenticated requests are passed on to handlers with data as specified by AuthenticatedRequest.
+ */
+export interface AuthenticatedRequest extends NextApiRequest {
+    user: {
+        userId: string;
+        isAdmin: boolean;
+    };
+}
+
+export type AuthenticatedHandler<T> = (
+    req: AuthenticatedRequest,
+    res: NextApiResponse<T>
+) => unknown | Promise<unknown>;

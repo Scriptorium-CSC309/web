@@ -1,17 +1,8 @@
 import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
 import jwt from "jsonwebtoken";
+import { AuthenticatedHandler, AuthenticatedRequest } from "./utils";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
-
-/**
- * Authenticated requests are passed on to handlers with data as specified by AuthenticatedRequest.
- */
-export interface AuthenticatedRequest extends NextApiRequest {
-    user: {
-        userId: string;
-        isAdmin: boolean;
-    };
-}
 
 /**
  * A Functional decorator to enable authorization and authentication.
@@ -20,7 +11,7 @@ export interface AuthenticatedRequest extends NextApiRequest {
  * @returns A modified handler with authorization and authentication implemented as specified by options.
  */
 export function withAuth<T>(
-    handler: NextApiHandler<T>,
+    handler: AuthenticatedHandler<T>,
     options?: { admin?: boolean }
 ): NextApiHandler<T | { error: string }> {
     return async (
@@ -39,11 +30,6 @@ export function withAuth<T>(
         try {
             const decoded = jwt.verify(token, JWT_SECRET) as any;
 
-            (req as AuthenticatedRequest).user = {
-                userId: decoded.id,
-                isAdmin: decoded.isAdmin,
-            };
-
             // Check for admin access if required
             if (options?.admin && !decoded.isAdmin) {
                 res.status(403).json({
@@ -52,8 +38,17 @@ export function withAuth<T>(
                 return;
             }
 
-            // Pass `res` as `NextApiResponse<T>` to the handler
-            await handler(req, res as NextApiResponse<T>);
+            const authReq = req as AuthenticatedRequest
+            authReq.user = {
+                userId: decoded.id,
+                isAdmin: decoded.isAdmin,
+            };
+
+
+            await handler(
+                authReq,
+                res as NextApiResponse<T>
+            );
         } catch (error) {
             res.status(401).json({ error: "Invalid token" });
             return;

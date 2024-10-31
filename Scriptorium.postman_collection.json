@@ -467,6 +467,85 @@
 			]
 		},
 		{
+			"name": "user",
+			"item": [
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "get-profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTczMDMzNTcyMCwiZXhwIjoxNzMwMzM5MzIwfQ.Pah8vx0ZECIbch6ZZMU57qg5HbN2IINzMhs9q_VESVE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "put-profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTczMDM0ODA5OCwiZXhwIjoxNzMwMzUxNjk4fQ.vut2V06czXfHnh4ujxTeDBpSY_Ob8x4zXhY2P33hCgw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"New Name\",\r\n  \"email\": \"dhedb@gmail.com\",\r\n  \"password\": \"passwordForScriptorium\",\r\n  \"avatarId\": 1\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+		{
 			"name": "code-templates",
 			"item": [
 				{
@@ -512,5 +591,10 @@
 				}
 			]
 		}
-	]
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	}
 }
