@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "71bf749a-b09c-4e8c-a155-32af5f5dfd93",
+		"_postman_id": "1a2d3a9b-80fd-4251-b61c-f35d53132e4b",
 		"name": "Scriptorium",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31557793"
+		"_exporter_id": "16580470"
 	},
 	"item": [
 		{
@@ -262,7 +262,6 @@
 						}
 					]
 				},
-				
 				{
 					"name": "C++",
 					"item": [
@@ -394,6 +393,19 @@
 				},
 				{
 					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();",
+									"pm.environment.set(\"accessToken\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -449,6 +461,52 @@
 								"hello"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "code-templates",
+			"item": [
+				{
+					"name": "save-template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Hello World\",\n    \"description\": \"A simple Hello World program\",\n    \"code\": \"print(\\\"hello world\\\")\",\n    \"language\": \"Python\",\n    \"tags\": [\"beginner\", \"python\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/code-templates/save-template",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"code-templates",
+								"save-template"
+							]
+						},
+						"description": "This endpoint allows you to save a code template by sending an HTTP POST request to the specified URL. The request should include the title, description, code, language, and tags for the template.\n\n### Request Body\n\n- title (string): The title of the code template.\n    \n- description (string): A brief description of the code template.\n    \n- code (string): The actual code content of the template.\n    \n- language (string): must be one of \"C++\", \"C\", \"Python\", \"Java\", or \"JS\".\n    \n- tags (array of strings): Tags associated with the code template; can be any string\n    \n\n### Response\n\nUpon successful execution, the endpoint returns a 200 status with a JSON response containing a message and the code template data created.\n\nExample:\n\n``` json\n{\n    \"message\": \"Code Template Saved: \\n \\n {\\n  \\\"id\\\": 2,\\n  \\\"title\\\": \\\"Hello World\\\",\\n  \\\"description\\\": \\\"A simple Hello World program\\\",\\n  \\\"code\\\": \\\"print(\\\\\\\"hello world\\\\\\\")\\\",\\n  \\\"language\\\": \\\"Python\\\",\\n  \\\"userId\\\": 1\\n}\"\n\n\n ```"
 					},
 					"response": []
 				}
