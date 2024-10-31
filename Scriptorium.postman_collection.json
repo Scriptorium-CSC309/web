@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "71bf749a-b09c-4e8c-a155-32af5f5dfd93",
+		"_postman_id": "5bc01f34-a32b-405d-97ca-00a2d3b5e911",
 		"name": "Scriptorium",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "31557793"
@@ -453,6 +453,50 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "get-profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTczMDMzNTcyMCwiZXhwIjoxNzMwMzM5MzIwfQ.Pah8vx0ZECIbch6ZZMU57qg5HbN2IINzMhs9q_VESVE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
 		}
-	]
+	],
+	"auth": {
+		"type": "bearer"
+	}
 }
