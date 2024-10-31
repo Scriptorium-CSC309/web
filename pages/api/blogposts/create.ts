@@ -1,4 +1,3 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import prisma from "@/prisma";
 import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 import { withAuth } from '@/src/auth/middleware';
