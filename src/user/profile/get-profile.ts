@@ -1,5 +1,4 @@
-// /src/handlers/users/getProfileHandler.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+import type {  NextApiResponse } from "next";
 import prisma from "@/prisma";
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest } from "@/src/auth/utils";
