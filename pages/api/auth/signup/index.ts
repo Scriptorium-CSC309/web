@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
 import { hashPassword } from "@/src/auth/utils";
 import Joi from "joi";
-import { NUM_AVATARS } from "@/src/constants";
+import { NUM_AVATARS, VALID_PHONE_NUMBER } from "@/src/constants";
 
 // Joi schema for request body validation
 const signupSchema = Joi.object({
@@ -10,6 +10,7 @@ const signupSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
     avatarId: Joi.number().integer().min(1).max(NUM_AVATARS).optional(),
+    phoneNumber: Joi.string().pattern(VALID_PHONE_NUMBER).optional()
 });
 
 export default async function signup(
@@ -25,16 +26,24 @@ export default async function signup(
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }
-    const { name, email, password, avatarId = 1 } = validatedData;
+    const { name, email, password, avatarId = 1, phoneNumber } = validatedData;
 
     if (!name || !email || !password) {
         return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    // Check if user with the same email or phone number already exists
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            OR: [{ email }, { phoneNumber }],
+        },
+    });
     if (existingUser) {
-        return res.status(400).json({ error: "User already exists" });
+        return res.status(400).json({
+            error: existingUser.email === email
+                ? "User with this email already exists"
+                : "User with this phone number already exists",
+        });
     }
 
     // Hash the password
@@ -49,6 +58,7 @@ export default async function signup(
                 password: hashedPassword,
                 isAdmin: false, // TODO: figure out how to give admin permission safely
                 avatarId: avatarId,
+                phoneNumber, 
             },
         });
         return res.status(201).json({ message: "User signed up successfully" });

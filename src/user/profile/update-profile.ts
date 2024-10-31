@@ -3,7 +3,7 @@ import prisma from "@/prisma";
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest, hashPassword } from "@/src/auth/utils";
 import Joi from "joi";
-import { NUM_AVATARS } from "@/src/constants";
+import { NUM_AVATARS, VALID_PHONE_NUMBER } from "@/src/constants";
 
 // Joi schema for request body validation
 const updateProfileSchema = Joi.object({
@@ -11,6 +11,9 @@ const updateProfileSchema = Joi.object({
     email: Joi.string().email().optional(),
     password: Joi.string().min(6).optional(),
     avatarId: Joi.number().integer().min(1).max(NUM_AVATARS).optional(),
+    phoneNumber: Joi.string()
+        .pattern(VALID_PHONE_NUMBER)
+        .optional(),
 });
 
 async function updateProfileInteractor(
@@ -27,27 +30,41 @@ async function updateProfileInteractor(
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        const { name, email, password, avatarId } = validatedData;
+        const { name, email, password, avatarId, phoneNumber } = validatedData;
 
         // Build update data object
         const updateData: any = {};
         if (name) updateData.name = name;
-        if (email) updateData.email = email;
         if (avatarId) updateData.avatarId = avatarId;
 
         // Check for email uniqueness if an email is provided
         if (email) {
-            const existingUser = await prisma.user.findUnique({
+            const existingUserWithEmail = await prisma.user.findUnique({
                 where: { email },
             });
 
-            if (existingUser && existingUser.id !== userId) {
+            if (existingUserWithEmail && existingUserWithEmail.id !== userId) {
                 res.status(400).json({
                     error: "Email is already in use by another user.",
                 });
                 return;
             }
             updateData.email = email;
+        }
+
+        // Check for phone number uniqueness if a phone number is provided
+        if (phoneNumber) {
+            const existingUserWithPhone = await prisma.user.findUnique({
+                where: { phoneNumber },
+            });
+
+            if (existingUserWithPhone && existingUserWithPhone.id !== userId) {
+                res.status(400).json({
+                    error: "Phone number is already in use by another user.",
+                });
+                return;
+            }
+            updateData.phoneNumber = phoneNumber;
         }
 
         // If password is provided, hash it before storing
@@ -60,7 +77,13 @@ async function updateProfileInteractor(
         const updatedUser = await prisma.user.update({
             where: { id: userId },
             data: updateData,
-            select: { id: true, name: true, email: true, avatarId: true }, // Do not return password as best practice
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarId: true,
+                phoneNumber: true,
+            }, // Do not return password as best practice
         });
 
         res.status(200).json({
