@@ -10,7 +10,7 @@ const signupSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
     avatarId: Joi.number().integer().min(1).max(NUM_AVATARS).optional(),
-    phoneNumber: Joi.string().pattern(VALID_PHONE_NUMBER).optional()
+    phoneNumber: Joi.string().pattern(VALID_PHONE_NUMBER).required()
 });
 
 export default async function signup(
@@ -63,6 +63,7 @@ export default async function signup(
         });
         return res.status(201).json({ message: "User signed up successfully" });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal server error" });
     }
 }
