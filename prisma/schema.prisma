@@ -43,7 +43,7 @@ model BlogPost {
 
 model Comment {
   id        Int      @id @default(autoincrement())
-  postedAt  DateTime
+  postedAt  DateTime @default(now())
   userId    Int
   postId    Int
   content   String
