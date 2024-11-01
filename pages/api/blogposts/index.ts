@@ -1,4 +1,3 @@
-import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest } from "@/src/auth/utils";
 import getBlogPostsInteractor from "@/src/blogposts/get-blogposts";
 import type { NextApiResponse } from "next";
