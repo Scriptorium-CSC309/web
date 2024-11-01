@@ -18,8 +18,8 @@ CREATE TABLE "BlogPost" (
     "postedAt" DATETIME NOT NULL,
     "userId" INTEGER NOT NULL,
     "isHidden" BOOLEAN NOT NULL DEFAULT false,
-    "upvotes" INTEGER NOT NULL,
-    "downvotes" INTEGER NOT NULL,
+    "upvotes" INTEGER NOT NULL DEFAULT 0,
+    "downvotes" INTEGER NOT NULL DEFAULT 0,
     CONSTRAINT "BlogPost_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -31,8 +31,8 @@ CREATE TABLE "Comment" (
     "postId" INTEGER NOT NULL,
     "content" TEXT NOT NULL,
     "isHidden" BOOLEAN NOT NULL DEFAULT false,
-    "upvotes" INTEGER NOT NULL,
-    "downvotes" INTEGER NOT NULL,
+    "upvotes" INTEGER NOT NULL DEFAULT 0,
+    "downvotes" INTEGER NOT NULL DEFAULT 0,
     CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Comment_postId_fkey" FOREIGN KEY ("postId") REFERENCES "BlogPost" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
