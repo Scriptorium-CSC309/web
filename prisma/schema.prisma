@@ -31,8 +31,8 @@ model BlogPost {
   postedAt    DateTime
   userId      Int
   isHidden    Boolean  @default(false)
-  upvotes     Int
-  downvotes   Int
+  upvotes     Int      @default(0)
+  downvotes   Int      @default(0)
 
   tags            BlogPostTag[]
   comments        Comment[]
@@ -43,13 +43,13 @@ model BlogPost {
 
 model Comment {
   id        Int      @id @default(autoincrement())
-  postedAt  DateTime
+  postedAt  DateTime @default(now())
   userId    Int
   postId    Int
   content   String
   isHidden  Boolean  @default(false)
-  upvotes   Int
-  downvotes Int
+  upvotes   Int      @default(0)
+  downvotes Int      @default(0)
 
   user           User            @relation(fields: [userId], references: [id])
   blogPost       BlogPost        @relation(fields: [postId], references: [id])
