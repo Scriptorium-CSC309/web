@@ -618,7 +618,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/code-templates/save-template",
+							"raw": "http://localhost:3000/api/code-template/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -631,6 +631,66 @@
 							]
 						},
 						"description": "This endpoint allows you to save a code template by sending an HTTP POST request to the specified URL. The request should include the title, description, code, language, and tags for the template.\n\n### Request Body\n\n- title (string): The title of the code template.\n    \n- description (string): A brief description of the code template.\n    \n- code (string): The actual code content of the template.\n    \n- language (string): must be one of \"C++\", \"C\", \"Python\", \"Java\", or \"JS\".\n    \n- tags (array of strings): Tags associated with the code template; can be any string\n    \n\n### Response\n\nUpon successful execution, the endpoint returns a 200 status with a JSON response containing a message and the code template data created.\n\nExample:\n\n``` json\n{\n    \"message\": \"Code Template Saved: \\n \\n {\\n  \\\"id\\\": 2,\\n  \\\"title\\\": \\\"Hello World\\\",\\n  \\\"description\\\": \\\"A simple Hello World program\\\",\\n  \\\"code\\\": \\\"print(\\\\\\\"hello world\\\\\\\")\\\",\\n  \\\"language\\\": \\\"Python\\\",\\n  \\\"userId\\\": 1\\n}\"\n\n\n ```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "blogposts",
+			"item": [
+				{
+					"name": "fetch-blogposts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "create-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTczMDQ3ODYwMiwiZXhwIjoxNzMwNDgyMjAyfQ.YjHPUfEBZ7VHPp8KciD8HIXzCfji7MQq_JiAi-FqeUQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"postId\": 1,\r\n  \"content\": \"Great article! I found the insights on Next.js very helpful. Looking forward to more posts like this.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments"
+							]
+						}
 					},
 					"response": []
 				}
