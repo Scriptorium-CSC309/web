@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1a2d3a9b-80fd-4251-b61c-f35d53132e4b",
+		"_postman_id": "35abb045-b2e4-4aab-8ec4-d4b6b350c9d4",
 		"name": "Scriptorium",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "16580470"
+		"_exporter_id": "31557793"
 	},
 	"item": [
 		{
@@ -442,7 +442,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MzAyNDM0MjYsImV4cCI6MTczMDI0NzAyNn0.iT_31j6VgOgt8q-k7b4Tx6wR6ci6FC73Okv2Ds24Rpo",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTczMDM4NDcxNCwiZXhwIjoxNzMwMzg4MzE0fQ.6zRGqYRPU3qR4jDLZYu6OzI59tFly4-n-ARyoAO1uFw",
 									"type": "string"
 								}
 							]
@@ -545,6 +545,51 @@
 						}
 					]
 				},
+				{
+					"name": "blogposts",
+					"item": [
+						{
+							"name": "get-posts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/blogposts?pageSize=1&sortBy=valued&page=1&tags=Cynthia",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"blogposts"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "1"
+										},
+										{
+											"key": "sortBy",
+											"value": "valued"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "tags",
+											"value": "Cynthia"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
 		{
 			"name": "code-templates",
 			"item": [
@@ -581,16 +626,14 @@
 							"port": "3000",
 							"path": [
 								"api",
-								"code-templates",
-								"save-template"
+								"code-template",
+								""
 							]
 						},
 						"description": "This endpoint allows you to save a code template by sending an HTTP POST request to the specified URL. The request should include the title, description, code, language, and tags for the template.\n\n### Request Body\n\n- title (string): The title of the code template.\n    \n- description (string): A brief description of the code template.\n    \n- code (string): The actual code content of the template.\n    \n- language (string): must be one of \"C++\", \"C\", \"Python\", \"Java\", or \"JS\".\n    \n- tags (array of strings): Tags associated with the code template; can be any string\n    \n\n### Response\n\nUpon successful execution, the endpoint returns a 200 status with a JSON response containing a message and the code template data created.\n\nExample:\n\n``` json\n{\n    \"message\": \"Code Template Saved: \\n \\n {\\n  \\\"id\\\": 2,\\n  \\\"title\\\": \\\"Hello World\\\",\\n  \\\"description\\\": \\\"A simple Hello World program\\\",\\n  \\\"code\\\": \\\"print(\\\\\\\"hello world\\\\\\\")\\\",\\n  \\\"language\\\": \\\"Python\\\",\\n  \\\"userId\\\": 1\\n}\"\n\n\n ```"
 					},
 					"response": []
 				}
-			]
-		}
 			]
 		}
 	],
