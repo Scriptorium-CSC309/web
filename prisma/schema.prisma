@@ -52,7 +52,7 @@ model Comment {
   downvotes Int      @default(0)
 
   user           User            @relation(fields: [userId], references: [id])
-  blogPost       BlogPost        @relation(fields: [postId], references: [id])
+  blogPost       BlogPost        @relation(fields: [postId], references: [id], onDelete: Cascade)
   commentReports CommentReport[]
 }
 
