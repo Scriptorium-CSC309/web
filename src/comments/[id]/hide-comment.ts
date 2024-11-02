@@ -62,7 +62,7 @@ async function handler(
             data: { isHidden: isHidden },
         });
 
-        return res.status(200).json({ message: "Comment hidden successfully" });
+        return res.status(200).json({ message: "Comment visibility set successfully" });
     } catch (err) {
         console.error("Error hiding comment:", err);
         return res.status(500).json({ error: "Internal Server Error" });
