@@ -43,9 +43,9 @@ async function handler(
     const user = req.user;
 
     // Create codeTemplateTags if they don't exist already
-    const tagRecords = await createOrUpdateTags(tags, prisma.codeTemplateTag);
+    const tagRecords = await createOrUpdateTags(tags, "codeTemplateTag");
 
-    const codeTemplate = await prisma.codeTemplate.create({
+    await prisma.codeTemplate.create({
         data: {
             title,
             description,
@@ -61,6 +61,7 @@ async function handler(
     res.status(200).json({
         message: "Code Template Saved Successfully.",
     });
+    return;
 }
 
 export default handler;

@@ -5,3 +5,4 @@ export const MAX_CHARS_TITLE_DESCRIPTION = 500;
 export const MAX_CHARS_CONTENT = 10000;
 export const MIN_CHARS = 1;
 export const MAX_CHARS_TAG = 50;
+export const SERVER_ERROR_MSG = "Internal Server Error";
