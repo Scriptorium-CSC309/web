@@ -64,7 +64,7 @@ async function updateCodeTemplateInteractor(
             res.status(403).json({ error: "Forbidden" });
             return;
         }
-        const tagRecords = await createOrUpdateTags(tags, prisma.codeTemplateTag);
+        const tagRecords = await createOrUpdateTags(tags, "codeTemplateTag");
         
         await prisma.codeTemplate.update({
             where: { id },
