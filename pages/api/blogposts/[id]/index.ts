@@ -8,7 +8,7 @@ import {withAuth} from "@/src/auth/middleware";
 const editBlogPost = async (req: AuthenticatedRequest, res: NextApiResponse) => {
     const { id } = req.query;
     const { title, description, content, tags } = req.body;
-    const userId = req.user.userId; // Assuming `userId` is provided by middleware
+    const userId = req.user.userId;
     // Validate the ID
     if (isNaN(Number(id))) {
         return res.status(400).json({ error: "Invalid ID" });
