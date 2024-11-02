@@ -55,14 +55,14 @@ model Comment {
   user           User            @relation(fields: [userId], references: [id])
   blogPost       BlogPost        @relation(fields: [postId], references: [id], onDelete: Cascade)
   commentReports CommentReport[]
-  commentVotes     CommentVote[]     
+  commentVotes   CommentVote[]
 }
 
 model CommentVote {
   id        Int      @id @default(autoincrement())
   userId    Int
   commentId Int
-  type      Int // 0 for upvote, 1 for downvote
+  type      String // either UPVOTE or DOWNVOTE
   createdAt DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id])
