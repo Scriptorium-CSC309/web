@@ -14,7 +14,6 @@ const addBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRespo
 
     try {
         const userId = Number(req.user.userId);
-        console.log("userId from req.user:", userId);  // Debugging log
 
         if (isNaN(userId)) {
             console.error("Invalid user ID:", userId);
