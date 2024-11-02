@@ -31,7 +31,7 @@ const addBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRespo
         }
         );
         const tagRecords = await Promise.all(BlogTagPromises);
-        
+
         const blogpost = await prisma.blogPost.create({
             data: {
                 title,
@@ -42,7 +42,7 @@ const addBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRespo
                     connect: { id: userId }
                 },
                 tags: {
-                    create: tags.map((tag: string) => ({ name: tag })),
+                    connect: tagRecords.map((tag) => ({ id: tag.id })),
                 },
             },
         });
