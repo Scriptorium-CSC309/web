@@ -4,6 +4,8 @@ import type { NextApiResponse } from "next";
 import prisma from "@/prisma";
 import {withAuth} from "@/src/auth/middleware";
 
+
+
 const addBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
     const { title, description, content, tags } = req.body;
     
@@ -19,7 +21,17 @@ const addBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRespo
             console.error("Invalid user ID:", userId);
             return res.status(400).json({ error: "Invalid user ID" });
         }
-
+        // Create tags if they don't exist or connect if it does exist
+        const BlogTagPromises = tags.map((tag: string) => {
+            return prisma.blogPostTag.upsert({ 
+                where: { name: tag },
+                update: {},
+                create: { name: tag },
+            });
+        }
+        );
+        const tagRecords = await Promise.all(BlogTagPromises);
+        
         const blogpost = await prisma.blogPost.create({
             data: {
                 title,
