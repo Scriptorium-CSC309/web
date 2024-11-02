@@ -72,7 +72,13 @@ async function handler(
         const comments = await prisma.comment.findMany({
             where,
             include: {
-                user: true, // Include user details
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true, 
+                    },
+                },  // include some user details
             },
             skip,
             take,

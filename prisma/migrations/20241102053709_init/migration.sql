@@ -38,6 +38,17 @@ CREATE TABLE "Comment" (
 );
 
 -- CreateTable
+CREATE TABLE "CommentVote" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userId" INTEGER NOT NULL,
+    "commentId" INTEGER NOT NULL,
+    "type" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "CommentVote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "CommentVote_commentId_fkey" FOREIGN KEY ("commentId") REFERENCES "Comment" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "BlogPostReport" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "reporterId" INTEGER NOT NULL,
@@ -103,6 +114,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_phoneNumber_key" ON "User"("phoneNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CommentVote_userId_commentId_key" ON "CommentVote"("userId", "commentId");
 
 -- CreateIndex
 CREATE INDEX "BlogPostReport_blogPostId_idx" ON "BlogPostReport"("blogPostId");
