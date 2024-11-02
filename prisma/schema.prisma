@@ -21,6 +21,7 @@ model User {
   codeTemplates   CodeTemplate[]
   blogPostReports BlogPostReport[]
   commentReports  CommentReport[]
+  commentVotes    CommentVote[]
 }
 
 model BlogPost {
@@ -54,6 +55,20 @@ model Comment {
   user           User            @relation(fields: [userId], references: [id])
   blogPost       BlogPost        @relation(fields: [postId], references: [id], onDelete: Cascade)
   commentReports CommentReport[]
+  commentVotes     CommentVote[]     
+}
+
+model CommentVote {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  commentId Int
+  type      Int // 0 for upvote, 1 for downvote
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  comment Comment @relation(fields: [commentId], references: [id])
+
+  @@unique([userId, commentId]) // Ensures one vote per user per comment
 }
 
 model BlogPostReport {
