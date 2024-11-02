@@ -38,7 +38,7 @@ export function withAuth<T>(
                 return;
             }
 
-            const authReq = req as AuthenticatedRequest
+            const authReq = req as AuthenticatedRequest;
             authReq.user = {
                 userId: decoded.id,
                 isAdmin: decoded.isAdmin,
@@ -50,8 +50,12 @@ export function withAuth<T>(
                 res as NextApiResponse<T>
             );
         } catch (error) {
-            console.log(error);
-            res.status(401).json({ error: "Invalid token" });
+            if (error instanceof jwt.TokenExpiredError) {
+                res.status(401).json({ error: "Access token expired" });
+            } else {
+                console.log(error);
+                res.status(401).json({ error: "Invalid token" });
+            }
             return;
         }
     };

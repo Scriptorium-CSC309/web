@@ -4,8 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
 
-// Set JWT secret from environment variable
 const jwtSecret = process.env.JWT_SECRET!;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET!;
 
 // Joi schema for validation
 const schema = Joi.object({
@@ -13,10 +13,7 @@ const schema = Joi.object({
     password: Joi.string().min(6).required(),
 });
 
-export default async function login(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
+export default async function login(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== "POST") {
         res.status(405).json({ error: `Method ${req.method} not allowed` });
         return;
@@ -42,12 +39,18 @@ export default async function login(
         return res.status(401).json({ error: "Invalid password" });
     }
 
-    // Create JWT
-    const token = jwt.sign(
+    // Create Access and Refresh JWTs
+    const accessToken = jwt.sign(
         { id: user.id, isAdmin: user.isAdmin },
         jwtSecret,
-        { expiresIn: "1h" }
+        { expiresIn: "15m" } // shorter expiration for access token
     );
 
-    return res.status(200).json({ token });
+    const refreshToken = jwt.sign(
+        { id: user.id, isAdmin: user.isAdmin },
+        refreshTokenSecret,
+        { expiresIn: "7d" } // longer expiration for refresh token
+    );
+
+    return res.status(200).json({ accessToken, refreshToken });
 }
