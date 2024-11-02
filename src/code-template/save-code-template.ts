@@ -3,6 +3,8 @@ import prisma from "@/prisma";
 import Joi from "joi";
 import { LANGUAGES } from "@/src/constants";
 import { AuthenticatedRequest } from "../auth/utils";
+import { createOrUpdateTags } from "../utils";
+
 
 type Error = {
     error: string;
@@ -41,14 +43,7 @@ async function handler(
     const user = req.user;
 
     // Create codeTemplateTags if they don't exist already
-    const codeTemplateTagsPromises = tags.map(async (tag: string) => {
-        return prisma.codeTemplateTag.upsert({
-            where: { name: tag },
-            update: {},
-            create: { name: tag },
-        });
-    });
-    const tagRecords = await Promise.all(codeTemplateTagsPromises);
+    const tagRecords = await createOrUpdateTags(tags, prisma.codeTemplateTag);
 
     const codeTemplate = await prisma.codeTemplate.create({
         data: {
@@ -64,11 +59,7 @@ async function handler(
     });
 
     res.status(200).json({
-        message: `Code Template Saved: \n \n ${JSON.stringify(
-            codeTemplate,
-            null,
-            2
-        )}`,
+        message: "Code Template Saved Successfully.",
     });
 }
 
