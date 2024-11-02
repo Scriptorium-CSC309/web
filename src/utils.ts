@@ -14,5 +14,5 @@ export async function createOrUpdateTags(
       create: { name: tag },
     });
   });
-  return await Promise.all(codeTemplateTagsPromises);
+  return await Promise.all(TagsPromises);
 }
