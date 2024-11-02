@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type {NextApiResponse } from "next";
 import prisma from "@/prisma";
 import { AuthenticatedRequest } from "@/src/auth/utils";
 import { withAuth } from "@/src/auth/middleware";
@@ -40,7 +40,6 @@ const reportBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRe
 
         res.status(200).json({ message: "Reported successfully" });
     } catch (error) {
-        console.error("Error reporting blog post:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
