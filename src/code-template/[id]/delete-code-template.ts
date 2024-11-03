@@ -57,4 +57,4 @@ async function deleteCodeTemplateInteractor(
     }
 }
 
-export default withAuth(deleteCodeTemplateInteractor);
+export default deleteCodeTemplateInteractor;
