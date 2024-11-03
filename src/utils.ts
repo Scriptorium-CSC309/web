@@ -1,5 +1,7 @@
 import prisma from "@/prisma";
 import { PrismaClient } from "@prisma/client/extension";
+import { NextApiRequest } from "next/types";
+import { AuthenticatedRequest } from "./auth/utils";
 
 
 export async function createOrUpdateTags(
@@ -23,4 +25,8 @@ export function formatTags(tags: string | string[] | undefined) {
           : typeof tags === 'string'
           ? tags.split(',')
           : [];
+}
+
+export function isAuthenticatedRequest(req: NextApiRequest): req is AuthenticatedRequest {
+  return (req as AuthenticatedRequest).user !== undefined;
 }

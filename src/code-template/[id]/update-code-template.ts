@@ -85,4 +85,4 @@ async function updateCodeTemplateInteractor(
 }
 
 
-export default withAuth(updateCodeTemplateInteractor);
+export default updateCodeTemplateInteractor;

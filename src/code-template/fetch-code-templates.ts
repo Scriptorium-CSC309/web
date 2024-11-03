@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
 import Joi from "joi";
 import { Prisma } from "@prisma/client";
-import { formatTags } from "../utils";
+import { formatTags, isAuthenticatedRequest } from "../utils";
 import {
   MAX_CHARS_CONTENT,
   MAX_CHARS_TITLE_DESCRIPTION,
@@ -11,6 +11,7 @@ import {
   MIN_PAGES,
   PAGE_SIZE,
 } from "../constants";
+import { AuthenticatedRequest } from "../auth/utils";
 
 type Error = {
   error: string;
@@ -36,10 +37,11 @@ const getCodeTemplatesSchema = Joi.object({
   ).optional(),
   title: Joi.string().max(MAX_CHARS_TITLE_DESCRIPTION).optional(),
   code: Joi.string().max(MAX_CHARS_CONTENT).optional(),
+  userId: Joi.number().integer().optional(),
 });
 
 async function getCodeTemplatesInteractor(
-  req: NextApiRequest,
+  req: AuthenticatedRequest | NextApiRequest,
   res: NextApiResponse<CodeTemplateData | Error>
 ) {
   // TODO: consider if comments of hidden blogposts should be visible. Currently they are.
@@ -56,17 +58,20 @@ async function getCodeTemplatesInteractor(
       return;
     }
 
-    const { page, pageSize, title, code } = value;
-    let { tags } = value;
+    const { page, pageSize, title, code} = value;
+    let { tags, userId } = value;
 
     // Ensure `tags` is an array regardless of how it's provided
     tags = formatTags(tags);
 
+    if (isAuthenticatedRequest(req)) {userId = Number(req.user.userId)}
+
     // Construct the 'where' clause to filter comments by postId
     const filter: Prisma.CodeTemplateWhereInput = {
-      title: { contains: title },
-      code: { contains: code },
-      tags: { some: { name: { in: tags } } },
+      ...(title && { title: { contains: title } }),
+      ...(code && { code: { contains: code } }),
+      ...(tags.length > 0 && { tags: { some: { name: { in: tags } } } }),
+      ...(userId && { userId: { equals: userId } }),
     };
 
     // Calculate pagination parameters
