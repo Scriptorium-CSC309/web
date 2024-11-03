@@ -24,7 +24,7 @@ const codeTemplateSchema = Joi.object({
     tags: Joi.array().items(Joi.string()).required(),
 });
 
-async function handler(
+async function saveCodeTemplateInteractor(
     req: AuthenticatedRequest,
     res: NextApiResponse<Data | Error>
 ) {
@@ -64,4 +64,4 @@ async function handler(
     return;
 }
 
-export default handler;
+export default saveCodeTemplateInteractor;
