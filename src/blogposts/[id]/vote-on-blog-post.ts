@@ -94,6 +94,18 @@ async function voteOnBlogPost(
                             },
                         },
                     });
+                } else {
+                    await prisma.blogPost.update({
+                        where: { id },
+                        data: {
+                            upvotes: {
+                                decrement: 1,
+                            },
+                            downvotes: {
+                                increment: 1,
+                            },
+                        },
+                    });
                 }
                 
                 return res.status(200).json({
