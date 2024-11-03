@@ -4,11 +4,11 @@ import saveCodeTemplateInteractor from "@/src/code-template/save-code-template";
 import updateCodeTemplateInteractor from "@/src/code-template/[id]/update-code-template";
 import deleteCodeTemplateInteractor from "@/src/code-template/[id]/delete-code-template";
 import type { NextApiResponse } from "next";
-import deleteCodeTemplate from "@/src/code-template/[id]/delete-code-template";
+import getCodeTemplatesInteractor from "@/src/code-template/fetch-all-code-templates";
 
 function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     if (req.method === "GET") {
-        // getProfileInteractor(req, res);
+       return getCodeTemplatesInteractor(req, res);
     } else if (req.method === "POST") {
         return saveCodeTemplateInteractor(req, res);
     } else if (req.method === "PATCH") {
