@@ -33,10 +33,6 @@ async function updateCodeTemplateInteractor(
     req: AuthenticatedRequest,
     res: NextApiResponse<Data | Error>
 ) {
-    if (req.method !== "PATCH") {
-        res.status(405).json({ error: `Method ${req.method} not allowed` });
-        return;
-    }
     const { error: bodyError, value: bodyValue } = updateCodeTemplateSchema.validate(req.body);
     if (bodyError) {
         res.status(400).json({ error: bodyError.details[0].message });
@@ -85,4 +81,4 @@ async function updateCodeTemplateInteractor(
 }
 
 
-export default withAuth(updateCodeTemplateInteractor);
+export default updateCodeTemplateInteractor;
