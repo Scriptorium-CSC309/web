@@ -91,7 +91,12 @@ async function getCodeTemplatesInteractor(
             name: true,
             email: true,
           },
-        }, // include some user details
+        },
+        tags: {
+          select: {
+            name: true,
+          },
+        },
       },
       skip,
       take,
