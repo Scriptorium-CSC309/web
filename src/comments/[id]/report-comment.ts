@@ -3,6 +3,7 @@ import prisma from "@/prisma";
 import Joi from "joi";
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest } from "../../auth/utils";
+import { SERVER_ERROR_MSG } from "@/src/constants";
 
 type Error = {
     error: string;
@@ -86,8 +87,7 @@ async function handler(
             message: "Comment reported successfully",
         });
     } catch (err) {
-        console.error("Error reporting comment:", err);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: SERVER_ERROR_MSG });
     }
 }
 
