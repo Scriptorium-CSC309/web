@@ -35,13 +35,13 @@ type SuccessResponse = {
 };
 
 const querySchema = Joi.object({
-    page: Joi.number().min(1).required(),
+    page: Joi.number().integer().min(1).default(1),
     pageSize: Joi.number()
         .integer()
         .min(MIN_PAGE_SIZE)
         .max(MAX_PAGE_SIZE)
         .default(PAGE_SIZE),
-    sort: Joi.string().valid("asc", "desc").default("asc"),
+    sort: Joi.string().valid("asc", "desc").default("desc"),
 });
 
 async function handler(
@@ -69,11 +69,7 @@ async function handler(
     try {
         const [blogPosts, total] = await prisma.$transaction([
             prisma.blogPost.findMany({
-                where: {
-                    blogPostReports: {
-                        some: {},
-                    },
-                },
+                where: {},
                 include: {
                     tags: {
                         select: { name: true }, // Assuming tags have a `name` field
@@ -88,6 +84,7 @@ async function handler(
                 skip,
                 take,
             }),
+            prisma.blogPost.count(), // Count all blog posts
             prisma.blogPost.count({
                 where: {
                     blogPostReports: {
