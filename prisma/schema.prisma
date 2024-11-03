@@ -20,6 +20,7 @@ model User {
   comments        Comment[]
   codeTemplates   CodeTemplate[]
   blogPostReports BlogPostReport[]
+  blogPostVotes BlogPostVote[]
   commentReports  CommentReport[]
   commentVotes    CommentVote[]
 }
@@ -38,8 +39,20 @@ model BlogPost {
   tags            BlogPostTag[]
   comments        Comment[]
   blogPostReports BlogPostReport[]
-
+  blogPostVotes BlogPostVote[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model BlogPostVote {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  blogPostId  Int
+  type        String   
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id])
+  blogPost    BlogPost  @relation(fields: [blogPostId], references: [id])
+
+  @@unique([userId, blogPostId])
 }
 
 model Comment {
