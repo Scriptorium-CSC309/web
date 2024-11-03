@@ -1,18 +1,18 @@
-import type { NextApiResponse } from "next";
 import prisma from "@/prisma";
-import Joi from "joi";
-import { LANGUAGES } from "@/src/constants";
-import { AuthenticatedRequest } from "./auth/utils";
-import { Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client/extension";
 
-export async function createOrUpdateTags(tags: string[], model: Prisma.CodeTemplateTagDelegate | Prisma.BlogPostTagDelegate) {
-    const codeTemplateTagsPromises = tags.map(async (tag: string) => {
-        return prisma.codeTemplateTag.upsert({
-            where: { name: tag },
-            update: {},
-            create: { name: tag },
-        });
+
+export async function createOrUpdateTags(
+  tags: string[],
+  modelName: 'codeTemplateTag' | 'blogTemplateTag'
+) {
+  const model = prisma[modelName as keyof typeof prisma] as any;
+  const TagsPromises = tags.map(async (tag: string) => {
+    return model.upsert({
+      where: { name: tag },
+      update: {},
+      create: { name: tag },
     });
-    
-    return await Promise.all(codeTemplateTagsPromises);
+  });
+  return await Promise.all(TagsPromises);
 }
