@@ -16,3 +16,11 @@ export async function createOrUpdateTags(
   });
   return await Promise.all(TagsPromises);
 }
+
+export function formatTags(tags: string | string[] | undefined) {
+  return Array.isArray(tags)
+          ? tags
+          : typeof tags === 'string'
+          ? tags.split(',')
+          : [];
+}
