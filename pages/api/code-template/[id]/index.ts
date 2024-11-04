@@ -1,10 +1,8 @@
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest } from "@/src/auth/utils";
-import saveCodeTemplateInteractor from "@/src/code-template/save-code-template";
 import updateCodeTemplateInteractor from "@/src/code-template/[id]/update-code-template";
 import deleteCodeTemplateInteractor from "@/src/code-template/[id]/delete-code-template";
-import type { NextApiRequest, NextApiResponse } from "next";
-import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates";
+import type { NextApiResponse } from "next";
 
 /**
  * @swagger
@@ -106,12 +104,12 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *               error: "Internal server error."
  */
 function handler(req: AuthenticatedRequest, res: NextApiResponse) {
-    if (req.method === "PUT") {
+    if (req.method === "PATCH") {
         return updateCodeTemplateInteractor(req, res);
     } else if (req.method === "DELETE") {
         return deleteCodeTemplateInteractor(req, res);
     } else {
-        res.setHeader("Allow", ["PUT", "DELETE"]);
+        res.setHeader("Allow", ["PATCH", "DELETE"]);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
