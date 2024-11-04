@@ -8,14 +8,14 @@ import { withAuth } from "@/src/auth/middleware";
  * /api/blogposts/{id}/reports:
  *   post:
  *     summary: Report a Blog Post
- *     description: Allows an authenticated user to report a blog post by its ID with an explanation.
+ *     description: Allows an authenticated user to report a blog post by its ID, providing an explanation.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the blog post to report
+ *         description: The ID of the blog post to report.
  *     requestBody:
  *       required: true
  *       content:
@@ -40,12 +40,57 @@ import { withAuth } from "@/src/auth/middleware";
  *                   type: string
  *                   example: "Reported successfully"
  *       400:
- *         description: Bad Request (Missing required fields)
+ *         description: Bad Request - Missing required fields or invalid data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Missing required fields"
+ *       401:
+ *         description: Unauthorized - User not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       403:
+ *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Forbidden: Admin access required"
  *       404:
- *         description: Blog post not found
+ *         description: Not Found - Blog post not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Blog post not found"
  *       500:
- *         description: Internal Server Error
+ *         description: Internal Server Error - Unexpected failure
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal Server Error"
  */
+
 
 
 const reportBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {

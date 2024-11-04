@@ -6,14 +6,14 @@ import reportCommentHandler from "@/src/comments/[id]/report-comment";
  * /api/comments/{id}/reports:
  *   post:
  *     summary: Report a Comment
- *     description: Allows a user to report a comment by its ID, providing an explanation for the report.
+ *     description: Allows an authenticated user to report a comment by its ID, providing an explanation for the report.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the comment to report
+ *         description: The ID of the comment to report.
  *     requestBody:
  *       required: true
  *       content:
@@ -23,12 +23,12 @@ import reportCommentHandler from "@/src/comments/[id]/report-comment";
  *             properties:
  *               explanation:
  *                 type: string
- *                 description: Reason for reporting the comment
+ *                 description: Reason for reporting the comment (minimum 10 characters).
  *           example:
- *             explanation: "This comment is inappropriate."
+ *             explanation: "This comment contains inappropriate language."
  *     responses:
- *       200:
- *         description: Comment reported successfully
+ *       201:
+ *         description: Comment reported successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -36,15 +36,32 @@ import reportCommentHandler from "@/src/comments/[id]/report-comment";
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Report submitted successfully"
+ *                   example: "Comment reported successfully"
  *       400:
- *         description: Bad Request (Missing required fields)
+ *         description: Bad Request - Missing or invalid fields (e.g., explanation too short).
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Explanation is required and must be at least 10 characters long"
  *       404:
- *         description: Comment not found
+ *         description: Comment not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Comment not found"
+ *       409:
+ *         description: Conflict - Comment already reported by the user.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "You have already reported this comment"
  *       500:
- *         description: Internal Server Error
+ *         description: Internal Server Error - Unexpected failure.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Internal Server Error"
  */
-
 
 function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {

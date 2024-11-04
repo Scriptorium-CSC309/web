@@ -9,32 +9,43 @@ import { AuthenticatedRequest } from "@/src/auth/utils";
  * /api/blogposts/{id}:
  *   delete:
  *     summary: Delete a Blog Post
- *     description: Deletes a blog post by its ID.
+ *     description: Deletes a blog post by its ID. Only the post owner or an admin can delete the post.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the blog post to delete
+ *         description: ID of the blog post to delete.
  *     responses:
  *       200:
- *         description: Blog post deleted successfully
+ *         description: Blog post deleted successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Blog post deleted successfully"
+ *       403:
+ *         description: Forbidden if the user is not the owner or admin.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Forbidden: You can only delete your own blog posts"
  *       404:
- *         description: Blog post not found
- *       500:
- *         description: Internal Server Error
- * 
+ *         description: Blog post not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Blog post not found"
  *   put:
  *     summary: Edit a Blog Post
- *     description: Edits an existing blog post by its ID.
+ *     description: Updates a blog post's title, description, content, and tags.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the blog post to edit
+ *         description: ID of the blog post to edit.
  *     requestBody:
  *       required: true
  *       content:
@@ -55,39 +66,65 @@ import { AuthenticatedRequest } from "@/src/auth/utils";
  *           example:
  *             title: "Updated Blog Post Title"
  *             description: "Updated description"
- *             content: "Updated content of the blog post."
+ *             content: "Updated blog content."
  *             tags: ["updated", "tags"]
  *     responses:
  *       200:
- *         description: Blog post updated successfully
+ *         description: Blog post updated successfully.
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/BlogPost'
- *       400:
- *         description: Bad Request (Invalid fields or missing required fields)
+ *             example:
+ *               id: 1
+ *               title: "Updated Blog Post Title"
+ *               description: "Updated description"
+ *               content: "Updated blog content."
+ *       403:
+ *         description: Forbidden if the user is not the owner or admin.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "You do not have permission to update this blog post"
  *       404:
- *         description: Blog post not found
- *       500:
- *         description: Internal Server Error
- * 
+ *         description: Blog post not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Blog post not found"
  *   patch:
  *     summary: Hide a Blog Post
- *     description: Hides a blog post by its ID.
+ *     description: Allows the owner or admin to hide a blog post.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the blog post to hide
+ *         description: ID of the blog post to hide.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isHidden:
+ *                 type: boolean
+ *                 description: Set to true to hide the post.
+ *           example:
+ *             isHidden: true
  *     responses:
  *       200:
- *         description: Blog post hidden successfully
+ *         description: Blog post visibility set successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Blog post visibility set successfully"
  *       404:
- *         description: Blog post not found
- *       500:
- *         description: Internal Server Error
+ *         description: Blog post not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Blog post not found"
  */
 
 

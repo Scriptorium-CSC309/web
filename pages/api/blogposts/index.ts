@@ -9,61 +9,74 @@ import { isAuthenticatedRequest } from "@/src/utils";
  * @swagger
  * /api/blogposts:
  *   get:
- *     summary: Get Blog Posts
- *     description: Fetches a list of blog posts with optional filters.
+ *     summary: Retrieve Blog Posts
+ *     description: Fetches a list of blog posts with optional filters for pagination, search, tags, and sorting.
  *     parameters:
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *           default: 1
- *         example: 1
+ *         description: Page number for pagination.
  *       - in: query
  *         name: pageSize
  *         schema:
  *           type: integer
  *           default: 10
- *         example: 10
+ *         description: Number of posts per page.
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term to filter blog posts by title, content, or description.
  *       - in: query
  *         name: tags
  *         schema:
  *           type: array
  *           items:
  *             type: string
- *         example: ["tech", "news"]
+ *         description: List of tags to filter blog posts.
  *       - in: query
- *         name: title
+ *         name: sortBy
  *         schema:
  *           type: string
- *         example: "My Blog Post Title"
- *       - in: query
- *         name: content
- *         schema:
- *           type: string
- *         example: "Some content"
+ *           enum: [valued, controversial]
+ *         description: Sort by valued (upvotes) or controversial (upvotes and downvotes).
  *     responses:
  *       200:
- *         description: A list of blog posts
+ *         description: A list of blog posts with pagination data.
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 blogPosts:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/BlogPost'
- *                 total:
- *                   type: integer
- *                 page:
- *                   type: integer
- *                 pageSize:
- *                   type: integer
+ *             example:
+ *               posts: [
+ *                 {
+ *                   id: 1,
+ *                   title: "My First Blog Post",
+ *                   description: "A description of my blog post.",
+ *                   content: "Full content of my blog post.",
+ *                   postedAt: "2024-11-03T10:00:00Z",
+ *                   tags: ["tech", "news"],
+ *                   user: { id: 5, username: "user1" }
+ *                 }
+ *               ]
+ *               total: 1
+ *               page: 1
+ *               pageSize: 10
+ *       400:
+ *         description: Bad Request - Invalid pagination or filtering parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Invalid parameters: page must be at least 1."
  *       500:
- *         description: Internal Server Error
+ *         description: Internal Server Error - Unexpected failure.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Internal Server Error"
  *   post:
- *     summary: Create a Blog Post
- *     description: Creates a new blog post and saves it to the database.
+ *     summary: Create a New Blog Post
+ *     description: Allows authenticated users to create a new blog post with title, description, content, and tags.
  *     requestBody:
  *       required: true
  *       content:
@@ -82,21 +95,40 @@ import { isAuthenticatedRequest } from "@/src/utils";
  *                 items:
  *                   type: string
  *           example:
- *             title: "My New Blog Post"
- *             description: "An overview of my new post"
- *             content: "Here is the detailed content of my blog post."
- *             tags: ["tech", "news"]
+ *             title: "New Blog Post"
+ *             description: "An overview of the new post"
+ *             content: "Here is the full content of the new blog post."
+ *             tags: ["news", "update"]
  *     responses:
  *       200:
- *         description: Blog post created successfully
+ *         description: Blog post created successfully.
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/BlogPost'
+ *             example:
+ *               id: 3
+ *               title: "New Blog Post"
+ *               description: "An overview of the new post"
+ *               content: "Here is the full content of the new blog post."
+ *               postedAt: "2024-11-05T12:00:00Z"
+ *               tags: ["news", "update"]
  *       400:
- *         description: Bad Request (Missing required fields)
+ *         description: Bad Request - Missing required fields.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Missing required fields"
+ *       401:
+ *         description: Unauthorized - User not authenticated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Unauthorized"
  *       500:
- *         description: Internal Server Error
+ *         description: Internal Server Error - Unexpected failure.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Internal Server Error"
  */
 
 
