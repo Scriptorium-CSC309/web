@@ -47,11 +47,13 @@ async function handler(
         // Adjust the 'where' clause based on whether the user is authenticated
         let where: Prisma.CommentWhereInput;
         if (userId !== null) {
+            const isAdmin = req.user?.isAdmin || false;
             where = {
                 postId,
                 OR: [
                     { isHidden: false },
                     { AND: [{ isHidden: true }, { userId: userId }] },
+                    ...(isAdmin ? [{ isHidden: true }] : []),
                 ],
             };
         } else {
