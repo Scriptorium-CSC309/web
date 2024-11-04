@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
 import Joi from "joi";
 import { Prisma } from "@prisma/client";
+import { withOptionalAuth } from "../auth/middleware";
 
 type Error = {
     error: string;
@@ -105,4 +106,4 @@ async function handler(
     }
 }
 
-export default handler;
+export default withOptionalAuth(handler);
