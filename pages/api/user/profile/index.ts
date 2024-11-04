@@ -62,7 +62,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *                 error:
  *                   type: string
  *                   example: "Method POST not allowed"
- *   put:
+ *   patch:
  *     summary: Update User Profile
  *     description: Updates the profile information of the authenticated user.
  *     requestBody:
@@ -156,10 +156,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
         getProfileInteractor(req, res);
-    } else if (req.method === "PUT") {
+    } else if (req.method === "PATCH") {
         updateProfileInteractor(req, res);
     } else {
-        res.setHeader("Allow", ["GET", "PUT"]);
+        res.setHeader("Allow", ["GET", "PATCH"]);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }

@@ -1,14 +1,19 @@
-// /scripts/createAdmin.js
-
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 
 const prisma = new PrismaClient();
 
 async function main() {
-    const adminEmail = "admin@example.com";
-    const adminPassword = "Admin@123";
-    const adminName = "Admin User";
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const adminName = process.env.ADMIN_NAME;
+    const adminPhoneNumber = process.env.ADMIN_PHONE_NUMBER;
+
+    // Check if the environment variables are set
+    if (!adminEmail || !adminPassword || !adminName || !adminPhoneNumber) {
+        console.error("Error: ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME, and ADMIN_PHONE_NUMEBER environment variables must be set.");
+        process.exit(1);
+    }
 
     // Check if the admin user already exists
     const existingAdmin = await prisma.user.findUnique({
@@ -31,7 +36,7 @@ async function main() {
             password: hashedPassword,
             isAdmin: true,
             avatarId: 1, // Ensure this avatarId exists or adjust as necessary
-            phoneNumber: "000-000-0000", // Replace with a valid phone number if necessary
+            phoneNumber: adminPhoneNumber, // Replace with a valid phone number if necessary
         },
     });
 
