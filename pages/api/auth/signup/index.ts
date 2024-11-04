@@ -13,6 +13,82 @@ const signupSchema = Joi.object({
     phoneNumber: Joi.string().pattern(VALID_PHONE_NUMBER).required()
 });
 
+/**
+ * @swagger
+ * /api/signup:
+ *   post:
+ *     summary: User Signup
+ *     description: Registers a new user account.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "John Doe"
+ *               email:
+ *                 type: string
+ *                 example: "john.doe@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *               avatarId:
+ *                 type: integer
+ *                 example: 2
+ *               phoneNumber:
+ *                 type: string
+ *                 example: "+1234567890"
+ *           example:
+ *             name: "John Doe"
+ *             email: "john.doe@example.com"
+ *             password: "password123"
+ *             avatarId: 2
+ *             phoneNumber: "+1234567890"
+ *     responses:
+ *       201:
+ *         description: User signed up successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User signed up successfully"
+ *       400:
+ *         description: Bad request due to validation error or duplicate user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User with this email already exists"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ *       405:
+ *         description: Method not allowed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method GET not allowed"
+ */
 export default async function signup(
     req: NextApiRequest,
     res: NextApiResponse

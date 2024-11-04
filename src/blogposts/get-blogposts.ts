@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
 import Joi from "joi";
 import { Prisma } from "@prisma/client";
+import { withOptionalAuth } from "../auth/middleware";
+import { OptionallyAuthenticatedRequest } from "../auth/utils";
 
 type Error = {
     error: string;
@@ -23,7 +25,7 @@ const getBlogPostsSchema = Joi.object({
 });
 
 async function handler(
-    req: NextApiRequest,
+    req: OptionallyAuthenticatedRequest,
     res: NextApiResponse<Data | Error>
 ) {
     if (req.method !== "GET") {
@@ -40,8 +42,25 @@ async function handler(
 
         const { page, pageSize, search, tags, sortBy } = value;
 
+        const userId = req.user ? Number(req.user.userId) : null;
+
         // Construct the 'where' clause based on the filters
-        const where: Prisma.BlogPostWhereInput = {};
+    let where: Prisma.BlogPostWhereInput;
+        if (userId !== null) {
+            const isAdmin = req.user?.isAdmin || false;
+            where = {
+                OR: [
+                    { isHidden: false },
+                    { AND: [{ isHidden: true }, { userId: userId }] },
+                    ...(isAdmin ? [{ isHidden: true }] : []),
+                ],
+            };
+        } else {
+            // If not authenticated, only fetch comments that are not hidden
+            where = {
+                isHidden: false,
+            };
+        };
 
         // Handle search filtering
         if (search) {
@@ -105,4 +124,4 @@ async function handler(
     }
 }
 
-export default handler;
+export default withOptionalAuth(handler);

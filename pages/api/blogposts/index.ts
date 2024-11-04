@@ -3,6 +3,7 @@ import getBlogPostsInteractor from "@/src/blogposts/get-blogposts";
 import type { NextApiResponse } from "next";
 import prisma from "@/prisma";
 import {withAuth} from "@/src/auth/middleware";
+import { isAuthenticatedRequest } from "@/src/utils";
 
 
 
@@ -56,7 +57,7 @@ const addBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRespo
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     if (req.method === "GET") {
-        getBlogPostsInteractor(req, res);
+        return getBlogPostsInteractor(req, res);
     } else if (req.method === "POST") {
         await addBlogPost(req, res);
     } else {

@@ -4,6 +4,66 @@ import jwt from "jsonwebtoken";
 const jwtSecret = process.env.JWT_SECRET!;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET!;
 
+/**
+ * @swagger
+ * /api/refresh:
+ *   post:
+ *     summary: Refresh Access Token
+ *     description: Issues a new access token using a valid refresh token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *           example:
+ *             refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *     responses:
+ *       200:
+ *         description: New access token issued successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Refresh token is required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Refresh token is required"
+ *       401:
+ *         description: Invalid refresh token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid refresh token"
+ *       405:
+ *         description: Method not allowed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method GET not allowed"
+ */
 export default async function refreshToken(
     req: NextApiRequest,
     res: NextApiResponse
