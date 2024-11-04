@@ -47,10 +47,12 @@ async function handler(
         // Construct the 'where' clause based on the filters
     let where: Prisma.BlogPostWhereInput;
         if (userId !== null) {
+            const isAdmin = req.user?.isAdmin || false;
             where = {
                 OR: [
                     { isHidden: false },
                     { AND: [{ isHidden: true }, { userId: userId }] },
+                    ...(isAdmin ? [{ isHidden: true }] : []),
                 ],
             };
         } else {
