@@ -12,18 +12,6 @@ command_exists () {
     command -v "$1" >/dev/null 2>&1 ;
 }
 
-# 0. Define the Next.js project directory
-PROJECT_DIR="web"
-
-# Check if project directory exists
-if [ ! -d "$PROJECT_DIR" ]; then
-    echo "Error: Project directory '$PROJECT_DIR' does not exist."
-    exit 1
-fi
-
-# Change to the Next.js project directory
-cd "$PROJECT_DIR"
-
 # 1. Load environment variables from .env if it exists
 if [ -f .env ]; then
     echo "Loading environment variables from .env..."
