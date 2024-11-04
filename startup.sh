@@ -64,7 +64,19 @@ check_version () {
     fi
 }
 
-# 0. Load environment variables from .env if it exists
+# 0. Define the Next.js project directory
+PROJECT_DIR="web"  
+
+# Check if project directory exists
+if [ ! -d "$PROJECT_DIR" ]; then
+    echo "Error: Project directory '$PROJECT_DIR' does not exist."
+    exit 1
+fi
+
+# Change to the Next.js project directory
+cd "$PROJECT_DIR"
+
+# 1. Load environment variables from .env if it exists
 if [ -f .env ]; then
     set -a
     source .env
@@ -72,7 +84,7 @@ if [ -f .env ]; then
     echo "Environment variables loaded from .env"
 fi
 
-# 1. Check for required compilers/interpreters
+# 2. Check for required compilers/interpreters
 echo "Checking for required compilers and interpreters..."
 
 # Check Node.js (version 20+)
@@ -102,15 +114,15 @@ check_version "java" 20 "-version" "java version \"([0-9]+)(?:\.[0-9]+)?(?:\.[0-
 
 echo "All required compilers and interpreters are installed."
 
-# 2. Install required packages via npm
+# 3. Install required packages via npm
 echo "Installing npm packages..."
 npm install
 
-# 3. Run Prisma migrations
+# 4. Run Prisma migrations
 echo "Running Prisma migrations..."
 npx prisma migrate deploy
 
-# 4. Check if Admin Credentials are Set
+# 5. Check if Admin Credentials are Set
 if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" || -z "$ADMIN_NAME" ]]; then
     echo "Error: ADMIN_EMAIL, ADMIN_PASSWORD, and ADMIN_NAME environment variables must be set."
     echo "You can set them in your environment or in a .env file."
@@ -121,7 +133,7 @@ if [[ -z "$ADMIN_EMAIL" || -z "$ADMIN_PASSWORD" || -z "$ADMIN_NAME" ]]; then
     exit 1
 fi
 
-# 5. Create an admin user
+# 6. Create an admin user
 echo "Creating admin user..."
 node ./scripts/createAdmin.js
 
