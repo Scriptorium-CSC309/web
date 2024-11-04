@@ -4,9 +4,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'My Next.js API',
+      title: 'Scriptorium API',
       version: '1.0.0',
-      description: 'API documentation for my Next.js project',
+      description: 'API documentation for my Scriptorium',
     },
     servers: [
       {
