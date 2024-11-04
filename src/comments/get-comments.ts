@@ -1,7 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
 import prisma from "@/prisma";
 import Joi from "joi";
 import { Prisma } from "@prisma/client";
+import { withOptionalAuth } from "../auth/middleware";
+import { OptionallyAuthenticatedRequest } from "../auth/utils";
 
 type Error = {
     error: string;
@@ -22,11 +24,9 @@ const getCommentsSchema = Joi.object({
 });
 
 async function handler(
-    req: NextApiRequest,
+    req: OptionallyAuthenticatedRequest,
     res: NextApiResponse<CommentData | Error>
 ) {
-    // TODO: consider if comments of hidden blogposts should be visible. Currently they are.
-
     if (req.method !== "GET") {
         res.status(405).json({ error: "Method not allowed" });
         return;
@@ -41,28 +41,42 @@ async function handler(
 
         const { page, pageSize, postId, sortBy } = value;
 
-        // Construct the 'where' clause to filter comments by postId
-        const where: Prisma.CommentWhereInput = { postId, isHidden: false };
+        // Extract userId from the authenticated request
+        const userId = req.user ? Number(req.user.userId) : null;
+
+        // Adjust the 'where' clause based on whether the user is authenticated
+        let where: Prisma.CommentWhereInput;
+        if (userId !== null) {
+            where = {
+                postId,
+                OR: [
+                    { isHidden: false },
+                    { AND: [{ isHidden: true }, { userId: userId }] },
+                ],
+            };
+        } else {
+            // If not authenticated, only fetch comments that are not hidden
+            where = {
+                postId,
+                isHidden: false,
+            };
+        }
 
         // Calculate pagination parameters
         const skip = (page - 1) * pageSize;
         const take = pageSize;
 
         // Handle sorting
-        let orderBy: Prisma.CommentOrderByWithRelationInput[] = [{ postedAt: "desc" }];
+        let orderBy: Prisma.CommentOrderByWithRelationInput[] = [
+            { postedAt: "desc" },
+        ];
 
         if (sortBy === "valued") {
             // Sort by upvotes descending and downvotes ascending
-            orderBy = [
-                { upvotes: "desc" },
-                { downvotes: "asc" },
-            ];
+            orderBy = [{ upvotes: "desc" }, { downvotes: "asc" }];
         } else if (sortBy === "controversial") {
-            // Approximate controversy by sorting by upvotes and downvotes descending
-            orderBy = [
-                { upvotes: "desc" },
-                { downvotes: "desc" },
-            ];
+            // Sort by upvotes and downvotes descending
+            orderBy = [{ downvotes: "desc" }, { upvotes: "asc" }];
         }
 
         // Fetch the total count of comments for pagination
@@ -97,4 +111,4 @@ async function handler(
     }
 }
 
-export default handler;
+export default withOptionalAuth(handler);
