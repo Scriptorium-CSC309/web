@@ -1,16 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { withAuth } from "@/src/auth/middleware";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { withAuth, withOptionalAuth } from "@/src/auth/middleware";
+import { AuthenticatedRequest, OptionallyAuthenticatedRequest } from "@/src/auth/utils";
+import type { NextApiResponse } from "next";
 
 type Data = {
-  name: string;
-};
+    userId: string;
+    isAdmin: boolean;
+} | null;
 
-function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
-  res.status(200).json({ name: "John Doe" });
+async function handler(req: OptionallyAuthenticatedRequest, res: NextApiResponse<Data>) {
+    return res.status(200).json(req.user);
 }
 
-export default withAuth(handler, { admin: true });
+export default withOptionalAuth(handler);
