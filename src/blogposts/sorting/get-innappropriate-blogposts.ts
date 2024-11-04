@@ -41,7 +41,7 @@ const querySchema = Joi.object({
         .min(MIN_PAGE_SIZE)
         .max(MAX_PAGE_SIZE)
         .default(PAGE_SIZE),
-    sort: Joi.string().valid("asc", "desc").default("desc"),
+    sort: Joi.string().valid("asc", "desc").default("dsc"),
 });
 
 async function handler(
