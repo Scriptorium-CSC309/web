@@ -5,6 +5,99 @@ import prisma from "@/prisma";
 import {withAuth} from "@/src/auth/middleware";
 import { isAuthenticatedRequest } from "@/src/utils";
 
+/**
+ * @swagger
+ * /api/blogposts:
+ *   get:
+ *     summary: Get Blog Posts
+ *     description: Fetches a list of blog posts with optional filters.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         example: 1
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         example: 10
+ *       - in: query
+ *         name: tags
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *         example: ["tech", "news"]
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         example: "My Blog Post Title"
+ *       - in: query
+ *         name: content
+ *         schema:
+ *           type: string
+ *         example: "Some content"
+ *     responses:
+ *       200:
+ *         description: A list of blog posts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 blogPosts:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/BlogPost'
+ *                 total:
+ *                   type: integer
+ *                 page:
+ *                   type: integer
+ *                 pageSize:
+ *                   type: integer
+ *       500:
+ *         description: Internal Server Error
+ *   post:
+ *     summary: Create a Blog Post
+ *     description: Creates a new blog post and saves it to the database.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *           example:
+ *             title: "My New Blog Post"
+ *             description: "An overview of my new post"
+ *             content: "Here is the detailed content of my blog post."
+ *             tags: ["tech", "news"]
+ *     responses:
+ *       200:
+ *         description: Blog post created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BlogPost'
+ *       400:
+ *         description: Bad Request (Missing required fields)
+ *       500:
+ *         description: Internal Server Error
+ */
 
 
 const addBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
