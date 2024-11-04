@@ -13,6 +13,83 @@ const schema = Joi.object({
     password: Joi.string().min(6).required(),
 });
 
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: User Login
+ *     description: Authenticates a user and returns an access token and refresh token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *           example:
+ *             email: "user@example.com"
+ *             password: "password123"
+ *     responses:
+ *       200:
+ *         description: Successful authentication
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 refreshToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "email must be a valid email"
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User not found"
+ *       401:
+ *         description: Invalid password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid password"
+ *       405:
+ *         description: Method not allowed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method GET not allowed"
+ */
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== "POST") {
         res.status(405).json({ error: `Method ${req.method} not allowed` });
