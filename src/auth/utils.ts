@@ -36,7 +36,20 @@ export interface AuthenticatedRequest extends NextApiRequest {
     };
 }
 
+// OptionallyAuthenticatedRequest's are passed on to handlers where auth is optional.
+export interface OptionallyAuthenticatedRequest extends NextApiRequest {
+    user: {
+        userId: string;
+        isAdmin: boolean;
+    } | null;
+}
+
 export type AuthenticatedHandler<T> = (
     req: AuthenticatedRequest,
+    res: NextApiResponse<T>
+) => unknown | Promise<unknown>;
+
+export type OptionallyAuthenticatedHandler<T> = (
+    req: OptionallyAuthenticatedRequest,
     res: NextApiResponse<T>
 ) => unknown | Promise<unknown>;
