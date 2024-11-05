@@ -1,0 +1,1453 @@
+{
+	"info": {
+		"_postman_id": "35abb045-b2e4-4aab-8ec4-d4b6b350c9d4",
+		"name": "Scriptorium",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31557793",
+		"_collection_link": "https://harshithl1777.postman.co/workspace/My-Workspace~51cd07f0-1298-4627-89c7-43696cb0b719/collection/31557793-35abb045-b2e4-4aab-8ec4-d4b6b350c9d4?action=share&source=collection_link&creator=31557793"
+	},
+	"item": [
+		{
+			"name": "execute",
+			"item": [
+				{
+					"name": "Python",
+					"item": [
+						{
+							"name": "execute-success",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"Python\",\n    \"code\": \n  \"import sys\\n\\nfor line in sys.stdin:\\n    print(f'Hello, {line.strip()}')\"\n  ,\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"C\",\n    \"code\": \"#include <stdio.h>\\n\\nint main() {\\n    int result = 1 / 0;\\n    printf(\\\"Result: %d\\\\n\\\", result);\\n    return 0;\\n}\",\n    \"stdin\": \"\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "C",
+					"item": [
+						{
+							"name": "execute-success",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"C\",\n    \"code\": \"#include <stdio.h>\\n#include <string.h>\\n\\nint main() {\\n    char input[100];\\n    if (fgets(input, sizeof(input), stdin) != NULL) {\\n        // Remove newline character if present\\n        size_t len = strlen(input);\\n        if (len > 0 && input[len - 1] == '\\\\n') {\\n            input[len - 1] = '\\\\0';\\n        }\\n        printf(\\\"Hello, %s\\\\n\\\", input);\\n    }\\n    return 0;\\n}\",\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"Python\",\n    \"code\": \"print(1 / 0)\",\n    \"stdin\": \"\",\n    \"timeout\": 5\n}\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "JS",
+					"item": [
+						{
+							"name": "execute-success",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"JS\",\n    \"code\": \"const readline = require('readline');\\n\\nconst rl = readline.createInterface({\\n  input: process.stdin,\\n  output: process.stdout,\\n  terminal: false\\n});\\n\\nrl.on('line', (line) => {\\n   console.log(`Hello, ${line.trim()}`);\\n});\\n\\nrl.on('end', () => {\\n    process.exit(0);\\n });\",\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"JS\",\n    \"code\": \"console.log('expect an error in stderr'); throw new Error('ERROR');\",\n    \"stdin\": \"World\",\n    \"timeout\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Execution for Javascript on Server"
+				},
+				{
+					"name": "Java",
+					"item": [
+						{
+							"name": "execute-success-java",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"Java\",\n    \"code\": \"class Main { public static void main(String[] args) { System.out.println(\\\"Hello, World!\\\"); } }\",\n    \"stdin\": \"\",\n    \"timeout\": 5000\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure-java",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"Java\",\n    \"code\": \"class Main { public static void main(String[] args) { int x = 5 / 0; System.out.println(x); } }\",\n    \"stdin\": \"\",\n    \"timeout\": 5000\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "C++",
+					"item": [
+						{
+							"name": "execute-success-c++",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"C++\",\n    \"code\": \"#include <iostream>\\nusing namespace std;\\n\\nint main() {\\n  int x;\\n // Type a number and press enter\\n  cin >> x; // Get user input from the keyboard\\n  cout << \\\"Your number is: \\\" << x;\\n  return 0;\\n}\",\n    \"stdin\": \"5\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "execute-failure-c++",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"C++\",\n    \"code\": \"#include <iostream>\\n\\nint main() {\\n    int x = 1;\\n    int y = 0;\\n    std::cout << (x / y) << std::endl;\\n    return 0;\\n}\",\n    \"stdin\": \"\",\n    \"timeout\": 5\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "Written by Postbot; modified by human:  \n  \nThis endpoint allows users to execute a code snippet in the specified programming language. The request should be sent via an HTTP POST method to the URL api/execute. The request body should be in raw format and include the following parameters:\n\n- \"language\" (string): should be either \"C++\", \"JS\", \"Python\", \"Java\", or \"C\"; otherwise, error 400 is retunred with message language not supported.\n    \n- \"code\" (string): The actual code snippet to be executed; note that quotes should be escaped.\n    \n- \"stdin\" (string): The standard input for the code execution.\n    \n- \"timeout\" (number): The maximum time limit for the code execution in seconds. (implemented in Part 2)\n    \n\nThe response to the request will have status code 400 or 200. The response body will include the following parameters:\n\n- \"stdout\" (string): The standard output generated by the code execution.\n    \n- \"stderr\" (string): The standard error output generated by the code execution."
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Rodrigo Hernández Cascante 1\",\r\n  \"email\": \"Rodrigo1@example.com\",\r\n  \"password\": \"passwordForScriptorium\",\r\n  \"phoneNumber\": \"43725595001\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);",
+									"pm.environment.set(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"Rodrigo1@example.com\",\r\n  \"password\": \"passwordForScriptorium\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": \"{{refreshToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login-admin-user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
+									"pm.environment.set(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{adminEmail}}\",\r\n  \"password\": \"{{adminPassword}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "get-profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"New Name\",\r\n  \"email\": \"dhedb@gmail.com\",\r\n  \"password\": \"passwordForScriptorium\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "code-templates",
+			"item": [
+				{
+					"name": "save-code-template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Hello Mars\",\n    \"description\": \"A simple Hello Mars program\",\n    \"code\": \"printf('%s', \\\"hello Mars\\\")\",\n    \"language\": \"C\",\n    \"tags\": [\"beginner\", \"C\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/code-template/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"code-template",
+								""
+							]
+						},
+						"description": "This endpoint allows you to save a code template by sending an HTTP POST request to the specified URL. The request should include the title, description, code, language, and tags for the template.\n\n### Request Body\n\n- title (string): The title of the code template.\n    \n- description (string): A brief description of the code template.\n    \n- code (string): The actual code content of the template.\n    \n- language (string): must be one of \"C++\", \"C\", \"Python\", \"Java\", or \"JS\".\n    \n- tags (array of strings): Tags associated with the code template; can be any string\n    \n\n### Response\n\nUpon successful execution, the endpoint returns a 200 status with a JSON response containing a message and the code template data created.\n\nExample:\n\n``` json\n{\n    \"message\": \"Code Template Saved: \\n \\n {\\n  \\\"id\\\": 2,\\n  \\\"title\\\": \\\"Hello World\\\",\\n  \\\"description\\\": \\\"A simple Hello World program\\\",\\n  \\\"code\\\": \\\"print(\\\\\\\"hello world\\\\\\\")\\\",\\n  \\\"language\\\": \\\"Python\\\",\\n  \\\"userId\\\": 1\\n}\"\n\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "update-code-template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Hello Jupiter\",\n    \"description\": \"A simple Hello Jupiter program\",\n    \"code\": \"printf('%s', \\\"hello Mars\\\")\",\n    \"tags\": [\"beginner\", \"C\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/code-template/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"code-template",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-code-template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/code-template/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"code-template",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch-all-code-templates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/code-template/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"code-template",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "filter-code-templates",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/code-template/?tags=class room&code=print&title=Hello",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"code-template",
+										""
+									],
+									"query": [
+										{
+											"key": "tags",
+											"value": "class room"
+										},
+										{
+											"key": "code",
+											"value": "print"
+										},
+										{
+											"key": "title",
+											"value": "Hello"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "visitor-fetch-all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/code-template/public/?userId=1&tags=class room",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"code-template",
+								"public",
+								""
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "tags",
+									"value": "class room"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "blogposts",
+			"item": [
+				{
+					"name": "fetch-blogposts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts?pageSize=6&page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "6"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-blogposts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add-blogposts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"My First Blog Post\",\n  \"description\": \"This is a description of my first blog post.\",\n  \"content\": \"This is the full content of the blog post.\",\n  \"tags\": [\"Tech\", \"Programming\"]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit-blogposts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"My First Blog Post\",\r\n  \"description\": \"This is a description of my first blog post.\",\r\n  \"content\": \"This is the full content of the blog post.\",\r\n  \"tags\": [\"Tech\", \"Programming\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "report-blogpost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"explanation\": \"blah blah\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts/3/reports",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts",
+								"3",
+								"reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upvote-blogposts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"upvote\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts/3/vote",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts",
+								"3",
+								"vote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "downvote-blogposts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"downvote\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts/4/vote",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts",
+								"4",
+								"vote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hideBlogPost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isHidden\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sort-by-inappropriate-reports",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sort\": \"asc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/blogposts/inappropriate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"blogposts",
+								"inappropriate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "create-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"postId\": 1,\r\n  \"content\": \"Great article! I found the insights on Next.js very helpful. Looking forward to more posts like this.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/comments?postId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hide-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isHidden\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/comments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments",
+								"1"
+							]
+						},
+						"description": "This endpoint makes an HTTP PATCH request to update the comment with the specified ID. The request body should contain a JSON payload with the \"isHidden\" key to update the visibility status of the comment.\n\n### Response\n\nThe response of this request is a JSON message which contains either the field \"message\" on success or the field \"error\" on an error with the appropriate error as its value."
+					},
+					"response": []
+				},
+				{
+					"name": "upvote-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzMwNTYwODQ4LCJleHAiOjE3MzA1NjQ0NDh9.UdtgjG6aORaIOp6cHKIwSslEPsYGdYpRi-Z176XSNkQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"upvote\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/comments/2/vote",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments",
+								"2",
+								"vote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "downvote-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"downvote\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/comments/2/vote",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments",
+								"2",
+								"vote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "report-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"explanation\": \"This comment contains offensive language and violates the community guidelines.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/comments/5/reports",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments",
+								"5",
+								"reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sort-by-innapropriate-reports",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/comments/inappropriate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"comments",
+								"inappropriate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": "{{accessToken}}"
+		}
+	]
+}
