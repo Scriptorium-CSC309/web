@@ -60,7 +60,7 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *                   type: integer
  *                 pageSize:
  *                   type: integer
-*       405:
+ *       405:
  *         description: Method not allowed
  *         content:
  *           application/json:
@@ -84,6 +84,7 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  * 
  * 
  * */
+
 function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
        return getCodeTemplatesInteractor(req, res);

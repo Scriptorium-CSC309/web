@@ -3,6 +3,96 @@ import prisma from "@/prisma";
 import { AuthenticatedRequest } from "@/src/auth/utils";
 import { withAuth } from "@/src/auth/middleware";
 
+/**
+ * @swagger
+ * /api/blogposts/{id}/reports:
+ *   post:
+ *     summary: Report a Blog Post
+ *     description: Allows an authenticated user to report a blog post by its ID, providing an explanation.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the blog post to report.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               explanation:
+ *                 type: string
+ *                 description: Reason for reporting the blog post
+ *           example:
+ *             explanation: "This post contains inappropriate content."
+ *     responses:
+ *       200:
+ *         description: Blog post reported successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Reported successfully"
+ *       400:
+ *         description: Bad Request - Missing required fields or invalid data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Missing required fields"
+ *       401:
+ *         description: Unauthorized - User not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       403:
+ *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Forbidden: Admin access required"
+ *       404:
+ *         description: Not Found - Blog post not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Blog post not found"
+ *       500:
+ *         description: Internal Server Error - Unexpected failure
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal Server Error"
+ */
+
+
+
 const reportBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
     // Only allow POST method
     if (req.method !== "POST") {
