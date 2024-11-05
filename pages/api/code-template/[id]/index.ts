@@ -28,7 +28,7 @@ import type { NextApiResponse } from "next";
  *                 type: string
  *               code:
  *                 type: string
- *                 description: language must be one of ["C++", "C", "Python", "Java", "JS"]
+ *                 description:
  *               tags:
  *                 type: array
  *                 items:
@@ -69,7 +69,17 @@ import type { NextApiResponse } from "next";
  *               properties:
  *                 error:
  *                   type: string
- *                   error: "Forbidden" 
+ *                   example: "Forbidden"
+ *       405:
+ *         description: Method not allowed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed" 
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -79,7 +89,7 @@ import type { NextApiResponse } from "next";
  *               properties:
  *                 error:
  *                   type: string
- *                   error: "Internal Server Error"
+ *                   example: "Internal Server Error"
  *   delete:
  *     summary: Delete Code Template
  *     description: Deletes an existing code template by ID.
@@ -120,7 +130,7 @@ import type { NextApiResponse } from "next";
  *               properties:
  *                 error:
  *                   type: string
- *                   error: "Forbidden" 
+ *                   example: "Forbidden" 
  *       405:
  *         description: Method not allowed
  *         content:
@@ -130,7 +140,7 @@ import type { NextApiResponse } from "next";
  *               properties:
  *                 error:
  *                   type: string
- *                   error: "Method not allowed"
+ *                   example: "Method not allowed"
  * 
  *       500:
  *         description: Internal Server Error
@@ -141,7 +151,7 @@ import type { NextApiResponse } from "next";
  *               properties:
  *                 error:
  *                   type: string
- *                   error: "Internal Server Error"
+ *                   example: "Internal Server Error"
  */
 
 function handler(req: AuthenticatedRequest, res: NextApiResponse) {

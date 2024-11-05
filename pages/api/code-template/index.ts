@@ -97,7 +97,17 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *                   type: integer
  *                 pageSize:
  *                   type: integer
- *       '500':
+ *       405:
+ *         description: Method not allowed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ *       500:
  *         description: Internal Server Error
  *         content:
  *           application/json:
@@ -113,6 +123,7 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *     description: Creates a new code template.
  *     requestBody:
  *       required: true
+ *       description: language must be one of ["C++", "C", "Python", "Java", "JS"]
  *       content:
  *         application/json:
  *           schema:
@@ -158,6 +169,16 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *                 error:
  *                   type: string
  *                   example: "<field> is required."
+ *       405:
+ *         description: Method not allowed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
  *       500:
  *         description: Internal Server Error
  *         content:

@@ -81,6 +81,7 @@ type ResponseData = { message: string } | ExecutionResult;
  *     description: Executes code in a specified programming language with optional standard input and timeout.
  *     requestBody:
  *       required: true
+ *       description: language must be one of ["C++", "C", "Python", "Java", "JS"]
  *       content:
  *         application/json:
  *           schema:
