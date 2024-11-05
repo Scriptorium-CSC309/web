@@ -3,42 +3,42 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
 
 /**
  * @swagger
- * /api/code-templates:
+ * /api/code-templates/public:
  *   get:
- *     summary: Get User's Own Code Templates for Authenticated User
- *     description: Fetches a list of code templates with optional filters for title, code, tags, and pagination.
+ *     summary: Get all code templates filtered by tags, title, description, and/or code.
+  *     description: Fetches a list of code templates with optional filters for title, code, tags, and pagination.
  *     parameters:
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *           default: 1
- *         example: 1
+ *           example: 1
  *       - in: query
  *         name: pageSize
  *         schema:
  *           type: integer
  *           default: 10
- *         example: 10
+ *           example: 10
  *       - in: query
  *         name: tags
  *         schema:
  *           type: array
  *           items:
  *             type: string
- *         example: ["JavaScript", "React"]
+ *           example: ["C"]
  *       - in: query
  *         name: title
  *         schema:
  *           type: string
- *         example: "My Code Template"
+ *           example: "Hello Mars"
  *       - in: query
  *         name: code
  *         schema:
  *           type: string
- *         example: "console.log('Hello, World!');"
+ *           example: "printf('%s', \"hello Mars\")"
  *     responses:
- *       200:
+ *       '200':
  *         description: A list of code templates
  *         content:
  *           application/json:
@@ -50,10 +50,44 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *                   items:
  *                     type: object
  *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
  *                       title:
  *                         type: string
+ *                         example: "Hello Mars"
+ *                       description:
+ *                         type: string
+ *                         example: "A simple Hello Mars program"
  *                       code:
  *                         type: string
+ *                         example: "printf('%s', \"hello Mars\")"
+ *                       language:
+ *                         type: string
+ *                         example: "C"
+ *                       userId:
+ *                         type: integer
+ *                         example: 1
+ *                       user:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 1
+ *                           name:
+ *                             type: string
+ *                             example: "Rodrigo Hernández Cascante 1"
+ *                           email:
+ *                             type: string
+ *                             example: "Rodrigo1@example.com"
+ *                       tags:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             name:
+ *                               type: string
+ *                               example: "beginner"
  *                 total:
  *                   type: integer
  *                 page:

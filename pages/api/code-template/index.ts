@@ -8,7 +8,7 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  * @swagger
  * /api/code-templates:
  *   get:
- *     summary: Get all code templates filtered by tags, title, description, and/or code.
+ *     summary: Get User's Own Code Templates for Authenticated User
  *     description: Fetches a list of code templates with optional filters for title, code, tags, and pagination.
  *     parameters:
  *       - in: query
