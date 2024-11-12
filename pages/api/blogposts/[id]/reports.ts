@@ -118,6 +118,20 @@ const reportBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRe
             return res.status(404).json({ error: "Blog post not found" });
         }
 
+        // Check if the user has already reported this blog post
+        const existingReport = await prisma.blogPostReport.findFirst({
+            where: {
+                reporterId,
+                blogPostId: Number(id),
+            },
+        });
+
+        if (existingReport) {
+            return res
+                .status(409)
+                .json({ error: "You have already reported this blog post" });
+        }
+
         // Create a report
         await prisma.blogPostReport.create({
             data: {
@@ -128,7 +142,7 @@ const reportBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiRe
             },
         });
 
-        res.status(200).json({ message: "Reported successfully" });
+        res.status(201).json({ message: "Blog post reported successfully" });
     } catch (error) {
         return res.status(500).json({ error: "Internal Server Error" });
     }

@@ -94,6 +94,7 @@ model BlogPostReport {
   reporter User     @relation(fields: [reporterId], references: [id])
   blogPost BlogPost @relation(fields: [blogPostId], references: [id])
 
+  @@unique([reporterId, blogPostId]) // Ensures one report per user per blog post
   @@index([blogPostId])
 }
 
@@ -107,6 +108,7 @@ model CommentReport {
   reporter User    @relation(fields: [reporterId], references: [id])
   comment  Comment @relation(fields: [commentId], references: [id])
 
+  @@unique([reporterId, commentId]) // Ensures one report per user per comment
   @@index([commentId])
 }
 
