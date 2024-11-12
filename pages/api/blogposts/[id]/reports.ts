@@ -1,7 +1,5 @@
-import type {NextApiResponse } from "next";
-import prisma from "@/prisma";
-import { AuthenticatedRequest } from "@/src/auth/utils";
-import { withAuth } from "@/src/auth/middleware";
+import type { NextApiRequest, NextApiResponse } from "next";
+import reportBlogPostHandler from "@/src/blogposts/[id]/report-blogpost";
 
 /**
  * @swagger
@@ -25,11 +23,11 @@ import { withAuth } from "@/src/auth/middleware";
  *             properties:
  *               explanation:
  *                 type: string
- *                 description: Reason for reporting the blog post
+ *                 description: Reason for reporting the blog post (minimum 10 characters)
  *           example:
  *             explanation: "This post contains inappropriate content."
  *     responses:
- *       200:
+ *       201:
  *         description: Blog post reported successfully
  *         content:
  *           application/json:
@@ -38,9 +36,9 @@ import { withAuth } from "@/src/auth/middleware";
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Reported successfully"
+ *                   example: "Blog post reported successfully"
  *       400:
- *         description: Bad Request - Missing required fields or invalid data
+ *         description: Bad Request - Missing or invalid fields (e.g., explanation too short)
  *         content:
  *           application/json:
  *             schema:
@@ -48,7 +46,7 @@ import { withAuth } from "@/src/auth/middleware";
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Missing required fields"
+ *                   example: "Explanation must be at least 10 characters long"
  *       401:
  *         description: Unauthorized - User not authenticated
  *         content:
@@ -59,18 +57,8 @@ import { withAuth } from "@/src/auth/middleware";
  *                 error:
  *                   type: string
  *                   example: "Unauthorized"
- *       403:
- *         description: Forbidden - Admin access required
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Forbidden: Admin access required"
  *       404:
- *         description: Not Found - Blog post not found
+ *         description: Blog post not found
  *         content:
  *           application/json:
  *             schema:
@@ -79,6 +67,16 @@ import { withAuth } from "@/src/auth/middleware";
  *                 error:
  *                   type: string
  *                   example: "Blog post not found"
+ *       409:
+ *         description: Conflict - Blog post already reported by the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "You have already reported this blog post"
  *       500:
  *         description: Internal Server Error - Unexpected failure
  *         content:
@@ -91,46 +89,13 @@ import { withAuth } from "@/src/auth/middleware";
  *                   example: "Internal Server Error"
  */
 
-
-
-const reportBlogPost = withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
-    // Only allow POST method
-    if (req.method !== "POST") {
+function handler(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method === "POST") {
+        return reportBlogPostHandler(req, res);
+    } else {
         res.setHeader("Allow", ["POST"]);
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
+}
 
-    const { id } = req.query;
-    const { explanation } = req.body;
-    const reporterId = Number(req.user.userId);
-
-    // Validate blog post ID and explanation
-    if (!id || !explanation) {
-        return res.status(400).json({ error: "Missing required fields" });
-    }
-
-    try {
-        // Check if the blog post exists
-        const blogPost = await prisma.blogPost.findUnique({
-            where: { id: Number(id) },
-        });
-        if (!blogPost) {
-            return res.status(404).json({ error: "Blog post not found" });
-        }
-
-        // Create a report
-        await prisma.blogPostReport.create({
-            data: {
-                reporterId,
-                blogPostId: Number(id),
-                explanation,
-                reportedAt: new Date(),
-            },
-        });
-
-        res.status(200).json({ message: "Reported successfully" });
-    } catch (error) {
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
-});
-export default reportBlogPost;
+export default handler;
