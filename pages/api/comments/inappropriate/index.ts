@@ -5,6 +5,7 @@ import getInnapropriateCommentsInteractor from "@/src/comments/inappropriate/get
  * @swagger
  * /api/comments/inappropriate:
  *   get:
+ *     tags: [Comments]
  *     summary: Get Inappropriate Comments
  *     description: Retrieves a list of comments marked as inappropriate, including a count of reports for each comment. Only accessible to authenticated users with admin privileges.
  *     parameters:

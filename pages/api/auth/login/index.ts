@@ -17,6 +17,7 @@ const schema = Joi.object({
  * @swagger
  * /api/login:
  *   post:
+ *     tags: [auth]
  *     summary: User Login
  *     description: Authenticates a user and returns an access token and refresh token.
  *     requestBody:

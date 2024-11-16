@@ -8,6 +8,7 @@ import type { NextApiResponse } from "next";
  * @swagger
  * /api/code-template/{id}:
  *   patch:
+ *     tags: [code-template]
  *     summary: Update Code Template
  *     description: Updates an existing code template by ID.
  *     parameters:
@@ -91,6 +92,7 @@ import type { NextApiResponse } from "next";
  *                   type: string
  *                   example: "Internal Server Error"
  *   delete:
+ *     tags: [code-template]
  *     summary: Delete Code Template
  *     description: Deletes an existing code template by ID.
  *     parameters:

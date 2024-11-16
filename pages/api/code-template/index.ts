@@ -8,6 +8,7 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  * @swagger
  * /api/code-templates:
  *   get:
+ *     tags: [code-template]
  *     summary: Get User's Own Code Templates for Authenticated User
  *     description: Fetches a list of code templates with optional filters for title, code, tags, and pagination.
  *     parameters:
@@ -119,6 +120,7 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *                   example: "Internal Server Error"
  *
  *   post:
+ *     tags: [code-template]
  *     summary: Save Code Template
  *     description: Creates a new code template.
  *     requestBody:

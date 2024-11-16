@@ -8,6 +8,7 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET!;
  * @swagger
  * /api/refresh:
  *   post:
+ *     tags: [auth]
  *     summary: Refresh Access Token
  *     description: Issues a new access token using a valid refresh token.
  *     requestBody:

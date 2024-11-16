@@ -8,8 +8,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *   post:
  *     summary: Execute code in a specified language
  *     description: Executes the provided code in the specified language and returns the result.
- *     tags:
- *       - Execute
+ *     tags: [Execute]
  *     requestBody:
  *       required: true
  *       content:

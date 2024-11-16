@@ -7,6 +7,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  * @swagger
  * /api/user/profile:
  *   get:
+ *     tags: [User]
  *     summary: Get User Profile
  *     description: Retrieves the profile information of the authenticated user.
  *     responses:
@@ -63,6 +64,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *                   type: string
  *                   example: "Method POST not allowed"
  *   patch:
+ *     tags: [User]
  *     summary: Update User Profile
  *     description: Updates the profile information of the authenticated user.
  *     requestBody:
