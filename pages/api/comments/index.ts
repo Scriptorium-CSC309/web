@@ -6,6 +6,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  * @swagger
  * /api/comments:
  *   get:
+ *     tags: [Comments]
  *     summary: Get Comments
  *     description: Retrieves a list of comments for a specific blog post with optional pagination and sorting.
  *     parameters:
@@ -85,6 +86,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *               error: "Internal Server Error"
  * 
  *   post:
+ *     tags: [Comments]
  *     summary: Create a Comment
  *     description: Allows an authenticated user to create a new comment on a specified blog post.
  *     requestBody:

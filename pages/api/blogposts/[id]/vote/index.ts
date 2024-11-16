@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from "next";
  * @swagger
  * /api/blogposts/{id}/vote:
  *   post:
+ *     tags: [blogposts]
  *     summary: Vote on a Blog Post
  *     description: Allows a user to upvote or downvote a blog post by its ID. If the user has already voted, the vote is updated; otherwise, a new vote is created.
  *     parameters:

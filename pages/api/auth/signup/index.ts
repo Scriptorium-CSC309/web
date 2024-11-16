@@ -17,6 +17,7 @@ const signupSchema = Joi.object({
  * @swagger
  * /api/signup:
  *   post:
+ *     tags: [auth]
  *     summary: User Signup
  *     description: Registers a new user account.
  *     requestBody:

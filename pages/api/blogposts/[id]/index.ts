@@ -8,6 +8,7 @@ import { AuthenticatedRequest } from "@/src/auth/utils";
  * @swagger
  * /api/blogposts/{id}:
  *   delete:
+ *     tags: [blogposts]
  *     summary: Delete a Blog Post
  *     description: Deletes a blog post by its ID. Only the post owner or an admin can delete the post.
  *     parameters:
@@ -37,6 +38,7 @@ import { AuthenticatedRequest } from "@/src/auth/utils";
  *             example:
  *               error: "Blog post not found"
  *   put:
+ *     tags: [blogposts]
  *     summary: Edit a Blog Post
  *     description: Updates a blog post's title, description, content, and tags.
  *     parameters:
@@ -91,6 +93,7 @@ import { AuthenticatedRequest } from "@/src/auth/utils";
  *             example:
  *               error: "Blog post not found"
  *   patch:
+ *     tags: [blogposts]
  *     summary: Hide a Blog Post
  *     description: Allows the owner or admin to hide a blog post.
  *     parameters:

@@ -7,6 +7,7 @@ import hideCommentHandler from "@/src/comments/[id]/hide-comment";
  *   patch:
  *     summary: Hide a Comment
  *     description: Hides or reveals a specific comment by its ID. Only accessible to authenticated users with admin privileges.
+ *     tags: [Comments]
  *     parameters:
  *       - in: path
  *         name: id

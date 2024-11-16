@@ -5,6 +5,7 @@ import reportCommentHandler from "@/src/comments/[id]/report-comment";
  * @swagger
  * /api/comments/{id}/reports:
  *   post:
+ *     tags: [Comments]
  *     summary: Report a Comment
  *     description: Allows an authenticated user to report a comment by its ID, providing an explanation for the report.
  *     parameters:

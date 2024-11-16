@@ -5,6 +5,7 @@ import voteOnCommentInteractor from "@/src/comments/[id]/vote-on-comments"
  * @swagger
  * /api/comments/{id}/vote:
  *   post:
+ *     tags: [Comment]
  *     summary: Vote on a Comment
  *     description: Allows an authenticated user to upvote or downvote a specific comment by its ID. Changing an existing vote is supported.
  *     parameters:

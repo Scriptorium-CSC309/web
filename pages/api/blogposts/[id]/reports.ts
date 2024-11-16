@@ -7,6 +7,7 @@ import { withAuth } from "@/src/auth/middleware";
  * @swagger
  * /api/blogposts/{id}/reports:
  *   post:
+ *     tags: [blogposts]
  *     summary: Report a Blog Post
  *     description: Allows an authenticated user to report a blog post by its ID, providing an explanation.
  *     parameters:

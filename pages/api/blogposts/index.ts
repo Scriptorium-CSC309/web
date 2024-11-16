@@ -8,7 +8,9 @@ import { isAuthenticatedRequest } from "@/src/utils";
 /**
  * @swagger
  * /api/blogposts:
+ * 
  *   get:
+ *     tags: [blogposts]
  *     summary: Retrieve Blog Posts
  *     description: Fetches a list of blog posts with optional filters for pagination, search, tags, and sorting.
  *     parameters:
@@ -75,6 +77,7 @@ import { isAuthenticatedRequest } from "@/src/utils";
  *             example:
  *               error: "Internal Server Error"
  *   post:
+ *     tags: [blogposts]
  *     summary: Create a New Blog Post
  *     description: Allows authenticated users to create a new blog post with title, description, content, and tags.
  *     requestBody:
