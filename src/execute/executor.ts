@@ -14,12 +14,6 @@ export interface ExecutionOptions {
      * Useful for programs that require user input.
      */
     stdin?: string;
-
-    /**
-     * (Optional) The maximum time allowed for code execution, specified in milliseconds.
-     * If the execution exceeds this time, it should be terminated to prevent indefinite runs.
-     */
-    timeout?: number; // in milliseconds (not needed for part 1)
 }
 
 /**

@@ -28,10 +28,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *                 type: string
  *                 description: (Optional) The standard input to be provided to the code during execution.
  *                 example: "input data"
- *               timeout:
- *                 type: integer
- *                 description: (Optional) The maximum time allowed for code execution, specified in milliseconds.
- *                 example: 5000
  *     responses:
  *       200:
  *         description: Code executed successfully
@@ -138,7 +134,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<ResponseData>
 ) {
-    let { language, code, stdin, timeout } = req.body;
+    let { language, code, stdin } = req.body;
     let executor = ExecutorFactory.fromLanguage(language);
     if (!executor) {
         res.status(400).json({ message: "The language is not supported." });
@@ -148,7 +144,6 @@ export default async function handler(
     const execution_result = await executor.execute({
         code: code,
         stdin: stdin,
-        timeout: timeout,
     });
     res.status(200).json(execution_result);
 }
