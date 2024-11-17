@@ -1,57 +1,55 @@
-import * as path from "path";
-import * as os from "os";
-
+import { ExecutionOptions, ExecutionResult, Executor } from "./executor";
 import {
     cleanupFile,
     createTempFile,
     getUniqueFileName,
     spawnHelper,
 } from "./utils";
-import { ExecutionOptions, ExecutionResult, Executor } from "./executor";
+import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../constants";
+
+const CPP_IMAGE_TAG = process.env.CPP_IMAGE_TAG!;
 
 export class CppExecutor implements Executor {
     /**
-     * Compile and execute the C++ file using g++ as a compiler.
+     * Compile and execute the C++ file using g++.
      */
     async execute(options: ExecutionOptions): Promise<ExecutionResult> {
         const tempFilePrefix = getUniqueFileName();
-        const tempDir = os.tmpdir();
 
         const tempFilePath = await createTempFile(
             tempFilePrefix + ".cpp",
             options.code
         );
-        const executablePath = path.join(tempDir, tempFilePrefix);
 
-        let { stdout, stderr, code } = await spawnHelper({
-            command: "g++",
-            args: ["-o", executablePath, tempFilePath],
-        });
+        const dockerArgs = [
+            "run",
+            "-i", // Interactivity is needed for providing stdin
+            "--rm", // Automatically remove the container after execution
+            "--ulimit", `cpu=${EXECUTION_TIME_LIMIT}`, // Limit to EXECUTION_TIME_LIMIT of CPU time
+            "--memory", `${EXECUTION_MEMORY_LIMIT}m`, // Limit memory to EXECUTION_MEMORY_LIMIT MB
+            "--mount",
+            `type=bind,source=${tempFilePath},target=/main.cpp,readonly`, // User does not have root permissions
+            CPP_IMAGE_TAG,
+            "g++ -o /main /main.cpp && /main", // command to execute: compile and run the program
+        ];
 
-        if (code !== 0) {
-            // compilation unsuccessful; don't try running executable
-            try {
-                await cleanupFile(tempFilePath);
-            } catch (error) {
-                console.error(`Error deleting .cpp file: ${error}`);
-            }
-            return { stdout, stderr };
-        }
-
-        let { stdout: runStdout, stderr: runStderr } = await spawnHelper(
-            { command: executablePath },
+        let { stdout, stderr, code } = await spawnHelper(
+            { command: "docker", args: dockerArgs },
             options.stdin
         );
 
-        stdout += runStdout;
-        stderr += runStderr;
+        // Handle forced Docker exit code
+        const FORCED_DOCKER_EXIT_CODE = 137;
+        if (code === FORCED_DOCKER_EXIT_CODE) {
+            stderr +=
+                "process exited with code 137. Most likely due to exceeding memory or CPU time limit.";
+        }
 
         try {
-            await cleanupFile(executablePath);
             await cleanupFile(tempFilePath);
         } catch (error) {
-            console.error(`Error deleting files: ${error}`);
+            console.error(`Error deleting file: ${error}`);
         }
-        return { stdout, stderr };
+        return { stdout: stdout, stderr: stderr };
     }
 }
