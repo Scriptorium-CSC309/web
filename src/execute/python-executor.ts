@@ -26,10 +26,17 @@ export class PythonExecutor implements Executor {
             'python3', '/code.py'  // command to execute in the shell after the image is built
         ];
 
-        const { stdout, stderr } = await spawnHelper(
+        let { stdout, stderr, code } = await spawnHelper(
             { command: "docker", args: dockerArgs },
             options.stdin
         );
+
+
+        // TODO: this approach works unless code itself exits with status 137. Think about what to do then 
+        const FORCED_DOCKER_EXIT_CODE = 137;
+        if (code == FORCED_DOCKER_EXIT_CODE) {   
+            stderr += "process exited with code 137. Most likely due to exceeding memory or CPU time limit."
+        }
 
         try {
             await cleanupFile(tempFilePath);
