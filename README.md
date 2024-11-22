@@ -3,7 +3,9 @@
 After cloning the repository, follow these steps:
 1. Create a `.env` file under the root directory using the template from the provided `.env.template`.
 2. Populate the `.env` file with correct environment variables
-
+3. Build required docker images in the @/Docker folder
+   For example, if building the dockerfile for CPP, you can execute the following in the terminal
+   `docker buildx build --tag cpp-executor:11 -f ./docker/cpp.Dockerfile ./docker`
  
 Then you can run the development server:
 
