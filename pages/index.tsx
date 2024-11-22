@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { darcula } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 const LandingPage: React.FC = () => {
     return (
@@ -139,7 +139,7 @@ const LandingPage: React.FC = () => {
                                     style={darcula}
                                     customStyle={{
                                         background: "transparent",
-                                        fontSize: "0.875rem", // Tailwind's text-sm size
+                                        fontSize: "0.875rem",
                                         padding: "0",
                                     }}
                                 >
