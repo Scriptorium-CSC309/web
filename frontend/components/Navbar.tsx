@@ -35,8 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
     const closeDropdown = () => setIsDropdownOpen(false);
 
     const handleLogout = () => {
-        // Add logout logic here (e.g., clearing tokens, resetting user context)
-        console.log("Logged out");
+        console.log("Logged out"); // Add logout logic here
     };
 
     return (
@@ -124,41 +123,58 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                             </button>
                         )}
 
-                        {/* User Profile Dropdown (Desktop Only) */}
-                        {user && (
-                            <div className="hidden sm:block relative">
-                                <button
-                                    onClick={toggleDropdown}
-                                    className="focus:outline-none"
-                                >
-                                    <Avatar
-                                        avatarId={user.avatarId}
-                                        width={36}
-                                        height={36}
-                                        className="rounded-full"
-                                    />
-                                </button>
-                                {isDropdownOpen && (
-                                    <div
-                                        className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1"
-                                        onMouseLeave={closeDropdown}
+                        {/* User Profile or Login/Signup */}
+                        <div className="hidden sm:flex items-center space-x-4">
+                            {user ? (
+                                <div className="relative">
+                                    <button
+                                        onClick={toggleDropdown}
+                                        className="focus:outline-none"
                                     >
-                                        <Link
-                                            href="/profile"
-                                            className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        <Avatar
+                                            avatarId={user.avatarId}
+                                            width={36}
+                                            height={36}
+                                            className="rounded-full"
+                                        />
+                                    </button>
+                                    {isDropdownOpen && (
+                                        <div
+                                            className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1"
+                                            onMouseLeave={closeDropdown}
                                         >
-                                            Profile
-                                        </Link>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                        >
-                                            Logout
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                                            <Link
+                                                href="/profile"
+                                                className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            >
+                                                Profile
+                                            </Link>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            >
+                                                Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <>
+                                    <Link
+                                        href="/auth/login"
+                                        className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        href="/auth/signup"
+                                        className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
+                                    >
+                                        Sign Up
+                                    </Link>
+                                </>
+                            )}
+                        </div>
 
                         {/* Mobile Hamburger Menu */}
                         <div className="sm:hidden">
@@ -194,7 +210,7 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                     >
                         Templates
                     </Link>
-                    {user && (
+                    {user ? (
                         <>
                             <Link
                                 href="/profile"
@@ -208,6 +224,21 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                             >
                                 Logout
                             </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                href="/auth/login"
+                                className="block text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                href="/auth/signup"
+                                className="block px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 text-center"
+                            >
+                                Sign Up
+                            </Link>
                         </>
                     )}
                 </div>
