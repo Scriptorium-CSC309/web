@@ -14,9 +14,10 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
     const user = useContext(UserStateContext);
     const navbarRef = useRef<HTMLDivElement>(null);
 
-    const { theme, setTheme, resolvedTheme } = useTheme(); // Include resolvedTheme for SSR compatibility
+    const { setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
         if (navbarRef.current) {
@@ -26,11 +27,17 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
     }, []);
 
     useEffect(() => {
-        // Ensure the component only renders after mounting (avoids hydration issues)
         setMounted(true);
     }, []);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+    const closeDropdown = () => setIsDropdownOpen(false);
+
+    const handleLogout = () => {
+        // Add logout logic here (e.g., clearing tokens, resetting user context)
+        console.log("Logged out");
+    };
 
     return (
         <nav
@@ -74,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                     {/* Actions */}
                     <div className="flex items-center space-x-4">
                         {/* Theme Toggle */}
-                        {mounted && ( // Only render theme toggle after hydration
+                        {mounted && (
                             <button
                                 onClick={() =>
                                     setTheme(
@@ -117,32 +124,41 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                             </button>
                         )}
 
-                        {/* User Profile or Login/Signup */}
-                        <div className="hidden sm:flex items-center space-x-4">
-                            {user ? (
-                                <Avatar
-                                    avatarId={user.avatarId}
-                                    width={36}
-                                    height={36}
-                                    className="rounded-full"
-                                />
-                            ) : (
-                                <>
-                                    <Link
-                                        href="/auth/login"
-                                        className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                        {/* User Profile Dropdown (Desktop Only) */}
+                        {user && (
+                            <div className="hidden sm:block relative">
+                                <button
+                                    onClick={toggleDropdown}
+                                    className="focus:outline-none"
+                                >
+                                    <Avatar
+                                        avatarId={user.avatarId}
+                                        width={36}
+                                        height={36}
+                                        className="rounded-full"
+                                    />
+                                </button>
+                                {isDropdownOpen && (
+                                    <div
+                                        className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1"
+                                        onMouseLeave={closeDropdown}
                                     >
-                                        Login
-                                    </Link>
-                                    <Link
-                                        href="/auth/signup"
-                                        className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
-                                    >
-                                        Sign Up
-                                    </Link>
-                                </>
-                            )}
-                        </div>
+                                        <Link
+                                            href="/profile"
+                                            className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                            Profile
+                                        </Link>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         {/* Mobile Hamburger Menu */}
                         <div className="sm:hidden">
@@ -178,27 +194,20 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                     >
                         Templates
                     </Link>
-                    {user ? (
-                        <Link
-                            href="/profile"
-                            className="block text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
-                        >
-                            Profile
-                        </Link>
-                    ) : (
+                    {user && (
                         <>
                             <Link
-                                href="/auth/login"
+                                href="/profile"
                                 className="block text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
                             >
-                                Login
+                                Profile
                             </Link>
-                            <Link
-                                href="/auth/signup"
-                                className="block px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 text-center"
+                            <button
+                                onClick={handleLogout}
+                                className="block w-full text-left px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700"
                             >
-                                Sign Up
-                            </Link>
+                                Logout
+                            </button>
                         </>
                     )}
                 </div>
