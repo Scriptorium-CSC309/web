@@ -157,7 +157,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  */
 function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
-        getProfileInteractor(req, res);
+        return getProfileInteractor(req, res);
     } else if (req.method === "PATCH") {
         updateProfileInteractor(req, res);
     } else {
