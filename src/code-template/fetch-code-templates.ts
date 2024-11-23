@@ -10,7 +10,7 @@ import {
   MIN_PAGE_SIZE,
   MIN_PAGES,
   PAGE_SIZE,
-} from "../constants";
+} from "../../constants";
 import { AuthenticatedRequest } from "../auth/utils";
 
 type Error = {

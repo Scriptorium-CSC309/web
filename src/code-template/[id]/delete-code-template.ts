@@ -3,7 +3,7 @@ import prisma from "@/prisma";
 import Joi from "joi";
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest } from "@/src/auth/utils";
-import { SERVER_ERROR_MSG } from "../../constants";
+import { SERVER_ERROR_MSG } from "../../../constants";
 
 
 

@@ -5,7 +5,7 @@ import {
     getUniqueFileName,
     spawnHelper,
 } from "./utils";
-import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../constants";
+import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../../constants";
 
 const GCC_IMAGE_TAG = process.env.GCC_IMAGE_TAG!;
 

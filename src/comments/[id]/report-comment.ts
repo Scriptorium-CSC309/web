@@ -3,7 +3,7 @@ import prisma from "@/prisma";
 import Joi from "joi";
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest } from "../../auth/utils";
-import { SERVER_ERROR_MSG } from "@/src/constants";
+import { SERVER_ERROR_MSG } from "@/constants";
 
 type Error = {
     error: string;
