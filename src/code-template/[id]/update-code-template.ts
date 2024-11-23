@@ -7,7 +7,7 @@ import {
     MAX_CHARS_TITLE_DESCRIPTION,
     MIN_CHARS,
     MAX_CHARS_TAG,
-} from "../../constants";
+} from "../../../constants";
 import { createOrUpdateTags } from "@/src/utils";
 
 type Error = {

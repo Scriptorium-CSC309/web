@@ -8,7 +8,7 @@ import {
     MIN_PAGE_SIZE,
     PAGE_SIZE,
     SERVER_ERROR_MSG,
-} from "@/src/constants";
+} from "@/constants";
 
 type Error = {
     error: string;

@@ -1,7 +1,7 @@
 import type { NextApiResponse } from "next";
 import prisma from "@/prisma";
 import Joi from "joi";
-import { LANGUAGES } from "@/src/constants";
+import { LANGUAGES } from "@/constants";
 import { AuthenticatedRequest } from "../auth/utils";
 import { createOrUpdateTags } from "../utils";
 

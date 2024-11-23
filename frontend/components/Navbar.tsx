@@ -5,6 +5,8 @@ import { StateContext as UserStateContext } from "../contexts/UserContext";
 import ScriptoriumLogo from "./ScriptoriumLogo";
 import HamburgerMenu from "./HamburgerMenu";
 import Avatar from "@/frontend/components/Avatar";
+import { clearTokens } from "@/frontend/utils/token-storage";
+import { DispatchContext as UserDispatchContext } from "@/frontend/contexts/UserContext";
 
 type NavbarProps = {
     onHeightChange?: (height: number) => void; // Callback to notify parent of height
@@ -13,10 +15,12 @@ type NavbarProps = {
 const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
     const user = useContext(UserStateContext);
     const navbarRef = useRef<HTMLDivElement>(null);
+    const dispatch = useContext(UserDispatchContext);
 
-    const { theme, setTheme, resolvedTheme } = useTheme(); // Include resolvedTheme for SSR compatibility
+    const { setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
         if (navbarRef.current) {
@@ -26,11 +30,17 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
     }, []);
 
     useEffect(() => {
-        // Ensure the component only renders after mounting (avoids hydration issues)
         setMounted(true);
     }, []);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+    const closeDropdown = () => setIsDropdownOpen(false);
+
+    const handleLogout = () => {
+        dispatch({ type: "LOGOUT" });
+        clearTokens();
+    };
 
     return (
         <nav
@@ -74,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                     {/* Actions */}
                     <div className="flex items-center space-x-4">
                         {/* Theme Toggle */}
-                        {mounted && ( // Only render theme toggle after hydration
+                        {mounted && (
                             <button
                                 onClick={() =>
                                     setTheme(
@@ -120,12 +130,38 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                         {/* User Profile or Login/Signup */}
                         <div className="hidden sm:flex items-center space-x-4">
                             {user ? (
-                                <Avatar
-                                    avatarId={user.avatarId}
-                                    width={36}
-                                    height={36}
-                                    className="rounded-full"
-                                />
+                                <div className="relative">
+                                    <button
+                                        onClick={toggleDropdown}
+                                        className="focus:outline-none"
+                                    >
+                                        <Avatar
+                                            avatarId={user.avatarId}
+                                            width={36}
+                                            height={36}
+                                            className="rounded-full"
+                                        />
+                                    </button>
+                                    {isDropdownOpen && (
+                                        <div
+                                            className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1"
+                                            onMouseLeave={closeDropdown}
+                                        >
+                                            <Link
+                                                href="/user/profile"
+                                                className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            >
+                                                Profile
+                                            </Link>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            >
+                                                Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             ) : (
                                 <>
                                     <Link
@@ -179,12 +215,20 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                         Templates
                     </Link>
                     {user ? (
-                        <Link
-                            href="/profile"
-                            className="block text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
-                        >
-                            Profile
-                        </Link>
+                        <>
+                            <Link
+                                href="/user/profile"
+                                className="block text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                            >
+                                Profile
+                            </Link>
+                            <button
+                                onClick={handleLogout}
+                                className="block w-full text-left px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700"
+                            >
+                                Logout
+                            </button>
+                        </>
                     ) : (
                         <>
                             <Link

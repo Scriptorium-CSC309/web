@@ -3,7 +3,7 @@ import prisma from "@/prisma";
 import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest, hashPassword } from "@/src/auth/utils";
 import Joi from "joi";
-import { NUM_AVATARS, VALID_PHONE_NUMBER } from "@/src/constants";
+import { NUM_AVATARS, VALID_PHONE_NUMBER } from "@/constants";
 
 // Joi schema for request body validation
 const updateProfileSchema = Joi.object({

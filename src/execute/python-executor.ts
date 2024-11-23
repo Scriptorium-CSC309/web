@@ -1,4 +1,4 @@
-import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../constants";
+import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../../constants";
 import { ExecutionOptions, ExecutionResult, Executor } from "./executor";
 import {
     cleanupFile,
