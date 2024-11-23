@@ -10,7 +10,7 @@ const LandingPage: React.FC = () => {
             <section className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white min-h-screen flex items-center justify-center">
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-                        Empower Your Code
+                        Accelarate your prototyping
                     </h1>
                     <p className="text-lg md:text-xl mb-8">
                         Build. Debug. Collaborate. All in one powerful platform.
