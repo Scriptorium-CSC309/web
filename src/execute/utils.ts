@@ -108,3 +108,12 @@ export async function cleanupFile(path: string): Promise<void> {
         throw error;
     }
 }
+
+/**
+ * Returns the full path of the current working directory.
+ * @returns {string} - The full path of the current working directory.
+ */
+export function getWorkDir(): string {
+    const cwd: string = process.cwd();
+    return path.resolve(cwd);
+}

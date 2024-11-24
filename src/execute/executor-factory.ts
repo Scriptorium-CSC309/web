@@ -5,6 +5,7 @@ import { PythonExecutor } from "./python-executor";
 import { JSExecutor } from "./js-executor";
 import { CppExecutor } from "./C++-executer";
 import { JavaExecutor } from "./java-executor";
+import { TSExecutor } from "./ts-executor";
 export class ExecutorFactory {
     /**
      * Return an Executor of the given language, or null if the language is not supported.
@@ -22,6 +23,8 @@ export class ExecutorFactory {
                 return new CppExecutor();
             case "Java":
                 return new JavaExecutor(); 
+            case "TS":
+                return new TSExecutor();
             default:
                 return null;
         }
