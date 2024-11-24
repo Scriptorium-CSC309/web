@@ -58,7 +58,7 @@ async function saveCodeTemplateInteractor(
         },
     });
 
-    res.status(200).json({
+    res.status(201).json({
         message: "Code Template Saved Successfully.",
     });
     return;

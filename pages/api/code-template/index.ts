@@ -151,7 +151,7 @@ import getCodeTemplatesInteractor from "@/src/code-template/fetch-code-templates
  *             tags: ["JavaScript", "Logging"]
  *             language: "JS"
  *     responses:
- *       200:
+ *       201:
  *         description: Code template created successfully
  *         content:
  *           application/json:
