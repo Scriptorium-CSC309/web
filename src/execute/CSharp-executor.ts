@@ -4,29 +4,19 @@ import {
     createTempFile,
     getUniqueFileName,
     spawnHelper,
-    getWorkDir,
 } from "./utils";
-import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT, TS_CONFIG_FILE, TS_CONFIG_CONTENT } from "../../constants";
-import { getWrapperProps } from "gatsby-plugin-image/dist/src/components/hooks";
+import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../../constants";
 
-const TS_IMAGE_TAG = process.env.TS_IMAGE_TAG!;
+const CSHARP_IMAGE_TAG = process.env.CSHARP_IMAGE_TAG!;
 
-export class TSExecutor implements Executor {
-    /**
-     * Execute the ts file using the Node runtime.
-     */
+export class CSharpExecutor implements Executor {
+
     async execute(options: ExecutionOptions): Promise<ExecutionResult> {
         const tempFilePrefix = getUniqueFileName();
 
-        // Create a temporary file with the user's code
         const tempFilePath = await createTempFile(
-            tempFilePrefix + ".ts",
+            tempFilePrefix + ".cs",
             options.code
-        );
-
-        const tempTSConfigPath = await createTempFile(
-            TS_CONFIG_FILE,
-            TS_CONFIG_CONTENT,
         );
 
         const dockerArgs = [
@@ -36,12 +26,9 @@ export class TSExecutor implements Executor {
             "--ulimit", `cpu=${EXECUTION_TIME_LIMIT}`, // Limit to EXECUTION_TIME_LIMIT of CPU time
             "--memory", `${EXECUTION_MEMORY_LIMIT}m`, // Limit memory to EXECUTION_MEMORY_LIMIT MB
             "--mount",
-            `type=bind,source=${tempFilePath},target=/main.ts,readonly`, // Mount the code file as readonly
-            "--mount",
-            `type=bind,source=${tempTSConfigPath},target=/${TS_CONFIG_FILE},readonly`, // Mount a tmpfs for /tmp
-            TS_IMAGE_TAG,
-            "ts-node",
-            "/main.ts", // Command to execute the Node.js file
+            `type=bind,source=${tempFilePath},target=/main.cs,readonly`, // User does not have root permissions
+            CSHARP_IMAGE_TAG,
+            "sh", "-c", "cp /main.cs tempApp/Program.cs && cd tempApp && dotnet run tempApp/Program.cs" // Compile and run the C# program
         ];
 
         let { stdout, stderr, code } = await spawnHelper(
@@ -61,7 +48,6 @@ export class TSExecutor implements Executor {
         } catch (error) {
             console.error(`Error deleting file: ${error}`);
         }
-
         return { stdout: stdout, stderr: stderr };
     }
 }

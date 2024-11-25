@@ -6,6 +6,7 @@ import { JSExecutor } from "./js-executor";
 import { CppExecutor } from "./C++-executer";
 import { JavaExecutor } from "./java-executor";
 import { TSExecutor } from "./ts-executor";
+import { CSharpExecutor } from "./CSharp-executor";
 export class ExecutorFactory {
     /**
      * Return an Executor of the given language, or null if the language is not supported.
@@ -25,6 +26,8 @@ export class ExecutorFactory {
                 return new JavaExecutor(); 
             case "TS":
                 return new TSExecutor();
+            case "C#":
+                return new CSharpExecutor();
             default:
                 return null;
         }

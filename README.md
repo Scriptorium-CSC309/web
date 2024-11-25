@@ -15,6 +15,7 @@ docker buildx build --tag c-executor:11 -f ./docker/c.Dockerfile ./docker
 docker buildx build --tag nodejs-executor:20 -f ./docker/js.Dockerfile ./docker
 docker buildx build --tag ts-executor:20 -f ./docker/ts.Dockerfile ./docker
 docker buildx build --tag python-executor:3.10 -f ./docker/js.Dockerfile ./docker
+docker buildx build --tag csharp-executor:11 -f ./docker/csharp.Dockerfile ./docker
 ```
  
 Then you can run the development server:

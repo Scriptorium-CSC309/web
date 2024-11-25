@@ -33,7 +33,7 @@ export async function spawnHelper(
         let stdout = "";
         let stderr = "";
 
-        // Capture stdout
+        // Capture stdout–
         process.stdout.on("data", (data) => {
             stdout += data.toString();
         });
