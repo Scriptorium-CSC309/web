@@ -1,4 +1,15 @@
-export const LANGUAGES = ["C++", "C", "Python", "Java", "JS", "TS", "C#"];
+export const LANGUAGES = [
+  "C++",
+  "C",
+  "Python",
+  "Java",
+  "JS",
+  "TS",
+  "C#",
+  "Ruby",
+  "PHP",
+  "Go"
+];
 export const NUM_AVATARS = 5;
 export const VALID_PHONE_NUMBER = /^\+?[1-9]\d{1,14}$/; // E.164 phone format
 export const MAX_CHARS_TITLE_DESCRIPTION = 500;
@@ -23,4 +34,4 @@ export const TS_CONFIG_CONTENT = `{
     "types": ["node"],
     "skipLibCheck": true
   }
-}`
+}`;
