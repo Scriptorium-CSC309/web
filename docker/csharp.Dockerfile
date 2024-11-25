@@ -1,6 +1,5 @@
 # Use the official .NET SDK image as the base
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine
 
 # Create a non-root user for security
 RUN adduser --disabled-password --gecos '' appuser

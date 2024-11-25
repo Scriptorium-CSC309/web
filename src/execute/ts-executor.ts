@@ -58,6 +58,7 @@ export class TSExecutor implements Executor {
 
         try {
             await cleanupFile(tempFilePath);
+            await cleanupFile(tempTSConfigPath);
         } catch (error) {
             console.error(`Error deleting file: ${error}`);
         }

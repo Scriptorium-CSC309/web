@@ -22,8 +22,8 @@ export const MAX_PAGE_SIZE = 100;
 export const MAX_PAGES = 100;
 export const PAGE_SIZE = 10;
 export const SERVER_ERROR_MSG = "Internal Server Error";
-export const EXECUTION_MEMORY_LIMIT = 128; // in MB
-export const EXECUTION_TIME_LIMIT = 10; // in seconds
+export const EXECUTION_MEMORY_LIMIT = 512; // in MB
+export const EXECUTION_TIME_LIMIT = 20; // in seconds
 export const TS_CONFIG_FILE = "tsconfig.json";
 export const TS_CONFIG_CONTENT = `{
   "compilerOptions": {

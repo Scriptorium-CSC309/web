@@ -1,5 +1,5 @@
 # Use the official PHP image from Docker Hub
-FROM php:cli
+FROM php:8.1-cli-alpine
 
 RUN adduser --disabled-password --gecos '' appuser
 
