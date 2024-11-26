@@ -13,8 +13,8 @@ After cloning the repository, follow these steps:
 docker buildx build --tag java-executor:20 -f ./docker/java.Dockerfile ./docker
 docker buildx build --tag c-executor:11 -f ./docker/c.Dockerfile ./docker
 docker buildx build --tag nodejs-executor:20 -f ./docker/js.Dockerfile ./docker
-docker buildx build --tag ts-executor:20 -f ./docker/ts.Dockerfile ./docker
 docker buildx build --tag python-executor:3.10 -f ./docker/js.Dockerfile ./docker
+docker buildx build --tag ts-executor:20 -f ./docker/ts.Dockerfile ./docker
 docker buildx build --tag csharp-executor:11 -f ./docker/csharp.Dockerfile ./docker
 docker buildx build --tag ruby-executor:11 -f ./docker/ruby.Dockerfile ./docker
 docker buildx build --tag php-executor:11 -f ./docker/php.Dockerfile ./docker
