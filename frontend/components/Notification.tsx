@@ -23,18 +23,23 @@ const Notification: React.FC<NotificationProps> = ({
 
     return (
         <div
-            className={`fixed top-4 right-4 z-50 flex items-center space-x-2 px-4 py-2 rounded-lg shadow-lg ${
+            className={`fixed top-4 right-4 z-50 flex items-center justify-between w-96 px-6 py-3 border-l-4 ${
                 type === "success"
-                    ? "bg-green-500 text-white"
-                    : "bg-red-500 text-white"
-            }`}
+                    ? "bg-green-500 border-green-600"
+                    : "bg-red-500 border-red-600"
+            } shadow-md`}
+            style={{
+                animation: "fadeIn 0.3s ease-in-out",
+                fontFamily: "Arial, sans-serif",
+                fontWeight: "500",
+            }}
         >
-            <span className="text-sm">{message}</span>
+            <span className="text-sm flex-1">{message}</span>
             <button
                 onClick={onClose}
-                className="ml-2 text-white hover:text-gray-300 focus:outline-none"
+                className={`ml-4 text-sm text-gray-600 hover:text-gray-950 focus:outline-none`}
             >
-                ✕
+                Dismiss
             </button>
         </div>
     );

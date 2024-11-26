@@ -3,6 +3,7 @@ import { AuthenticatedRequest } from "@/src/auth/utils";
 import updateCodeTemplateInteractor from "@/src/code-template/[id]/update-code-template";
 import deleteCodeTemplateInteractor from "@/src/code-template/[id]/delete-code-template";
 import type { NextApiResponse } from "next";
+import getCodeTemplateInteractor from "@/src/code-template/[id]/fetch-code-template";
 
 /**
  * @swagger
@@ -161,9 +162,11 @@ function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         return updateCodeTemplateInteractor(req, res);
     } else if (req.method === "DELETE") {
         return deleteCodeTemplateInteractor(req, res);
+    } else if (req.method === "GET") {
+        return getCodeTemplateInteractor(req, res);
     } else {
-        res.setHeader("Allow", ["PATCH", "DELETE"]);
+        res.setHeader("Allow", ["PATCH", "DELETE", "GET"]);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
-export default withAuth(handler);
+export default handler;

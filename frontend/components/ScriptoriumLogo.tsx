@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import Logo from "@/frontend/assets/images/scriptorium-logo.svg";
 
 interface ScriptoriumLogoProps {
@@ -18,8 +17,7 @@ const ScriptoriumLogo: React.FC<ScriptoriumLogoProps> = ({
                 height: `${size}rem`
             }}
         >
-            <Image 
-                src={Logo} 
+            <Logo 
                 alt="Scriptorium Logo" 
                 width={size}
                 height={size}
