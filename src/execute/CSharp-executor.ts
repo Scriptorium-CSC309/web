@@ -7,18 +7,15 @@ import {
 } from "./utils";
 import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../../constants";
 
-const NODE_IMAGE_TAG = process.env.NODE_IMAGE_TAG!;
+const CSHARP_IMAGE_TAG = process.env.CSHARP_IMAGE_TAG!;
 
-export class JSExecutor implements Executor {
-    /**
-     * Execute the Node.js file using the Node.js runtime.
-     */
+export class CSharpExecutor implements Executor {
+
     async execute(options: ExecutionOptions): Promise<ExecutionResult> {
         const tempFilePrefix = getUniqueFileName();
 
-        // Create a temporary file with the user's code
         const tempFilePath = await createTempFile(
-            tempFilePrefix + ".js",
+            tempFilePrefix + ".cs",
             options.code
         );
 
@@ -29,10 +26,9 @@ export class JSExecutor implements Executor {
             "--ulimit", `cpu=${EXECUTION_TIME_LIMIT}`, // Limit to EXECUTION_TIME_LIMIT of CPU time
             "--memory", `${EXECUTION_MEMORY_LIMIT}m`, // Limit memory to EXECUTION_MEMORY_LIMIT MB
             "--mount",
-            `type=bind,source=${tempFilePath},target=/main.js,readonly`, // Mount the code file as readonly
-            NODE_IMAGE_TAG,
-            "node",
-            "/main.js", // Command to execute the Node.js file
+            `type=bind,source=${tempFilePath},target=/main.cs,readonly`, // User does not have root permissions
+            CSHARP_IMAGE_TAG,
+            "sh", "-c", "cp /main.cs tempApp/Program.cs && cd tempApp && dotnet run tempApp/Program.cs" // Compile and run the C# program
         ];
 
         let { stdout, stderr, code } = await spawnHelper(
@@ -52,7 +48,6 @@ export class JSExecutor implements Executor {
         } catch (error) {
             console.error(`Error deleting file: ${error}`);
         }
-
         return { stdout: stdout, stderr: stderr };
     }
 }

@@ -33,7 +33,7 @@ export async function spawnHelper(
         let stdout = "";
         let stderr = "";
 
-        // Capture stdout
+        // Capture stdout–
         process.stdout.on("data", (data) => {
             stdout += data.toString();
         });
@@ -107,4 +107,13 @@ export async function cleanupFile(path: string): Promise<void> {
         console.log(error);
         throw error;
     }
+}
+
+/**
+ * Returns the full path of the current working directory.
+ * @returns {string} - The full path of the current working directory.
+ */
+export function getWorkDir(): string {
+    const cwd: string = process.cwd();
+    return path.resolve(cwd);
 }
