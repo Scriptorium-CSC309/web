@@ -7,9 +7,9 @@ import {
 } from "./utils";
 import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT } from "../../constants";
 
-const NODE_IMAGE_TAG = process.env.NODE_IMAGE_TAG!;
+const GO_IMAGE_TAG = process.env.GO_IMAGE_TAG!;
 
-export class JSExecutor implements Executor {
+export class GoExecutor implements Executor {
     /**
      * Execute the Node.js file using the Node.js runtime.
      */
@@ -18,7 +18,7 @@ export class JSExecutor implements Executor {
 
         // Create a temporary file with the user's code
         const tempFilePath = await createTempFile(
-            tempFilePrefix + ".js",
+            tempFilePrefix + ".go",
             options.code
         );
 
@@ -29,10 +29,11 @@ export class JSExecutor implements Executor {
             "--ulimit", `cpu=${EXECUTION_TIME_LIMIT}`, // Limit to EXECUTION_TIME_LIMIT of CPU time
             "--memory", `${EXECUTION_MEMORY_LIMIT}m`, // Limit memory to EXECUTION_MEMORY_LIMIT MB
             "--mount",
-            `type=bind,source=${tempFilePath},target=/main.js,readonly`, // Mount the code file as readonly
-            NODE_IMAGE_TAG,
-            "node",
-            "/main.js", // Command to execute the Node.js file
+            `type=bind,source=${tempFilePath},target=/main.go,readonly`, // Mount the code file as readonly
+            GO_IMAGE_TAG,
+            "go",
+            "run",
+            "/main.go", // Command to execute the Node.js file
         ];
 
         let { stdout, stderr, code } = await spawnHelper(
