@@ -18,7 +18,6 @@ const ScriptoriumLogo: React.FC<ScriptoriumLogoProps> = ({
             }}
         >
             <Logo 
-                src={Logo} 
                 alt="Scriptorium Logo" 
                 width={size}
                 height={size}

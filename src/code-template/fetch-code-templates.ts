@@ -54,29 +54,45 @@ async function getCodeTemplatesInteractor(
       return;
     }
 
-    const { page, pageSize, title, code, description} = value;
+    const { page, pageSize, title, code, description } = value;
     let { tags, userId } = value;
 
     // Ensure `tags` is an array regardless of how it's provided
     tags = formatTags(tags);
 
-    // Construct the 'where' clause to filter comments by postId
+    // Construct OR conditions for title, code, description, userId
+    const orConditions: Prisma.CodeTemplateWhereInput[] = [];
+
+    if (title) {
+      orConditions.push({ title: { contains: title } });
+    }
+
+    if (code) {
+      orConditions.push({ code: { contains: code } });
+    }
+
+    if (description) {
+      orConditions.push({ description: { contains: description } });
+    }
+
+    if (userId) {
+      orConditions.push({ userId: userId });
+    }
+
+    // Build the filter with tags as an AND condition and others as OR
     const filter: Prisma.CodeTemplateWhereInput = {
-      ...(title && { title: { contains: title } }),
-      ...(code && { code: { contains: code } }),
-      ...(description && {description: {contains: description}}),
       ...(tags.length > 0 && { tags: { some: { name: { in: tags } } } }),
-      ...(userId && { userId: { equals: userId } }),
+      ...(orConditions.length > 0 && { OR: orConditions }),
     };
 
     // Calculate pagination parameters
     const skip = (page - 1) * pageSize;
     const take = pageSize;
 
-    // Fetch the total count of comments for pagination
+    // Fetch the total count of code templates for pagination
     const total = await prisma.codeTemplate.count({ where: filter });
 
-    // Fetch the comments with pagination, filtering, and sorting
+    // Fetch the code templates with pagination and filtering
     const codeTemplates = await prisma.codeTemplate.findMany({
       where: filter,
       include: {
@@ -85,7 +101,7 @@ async function getCodeTemplatesInteractor(
             id: true,
             name: true,
             email: true,
-            avatarId: true
+            avatarId: true,
           },
         },
         tags: {

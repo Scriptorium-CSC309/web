@@ -8,4 +8,9 @@ export const languageToMonacoLanguage: { [key: string]: string } = {
     Python: "python",
     C: "c",
     "C++": "cpp",
+    TS: "typescript",
+    "C#": "csharp",
+    Ruby: "ruby",
+    PHP: "php",
+    Go: "go",
 };
