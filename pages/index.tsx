@@ -2,6 +2,9 @@ import React from "react";
 import Link from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import CollaborationSVG from "@/frontend/assets/images/collaboration.svg";
+import CodeTemplateSVG from "@/frontend/assets/images/code-template-icon.svg";
+import InstantExecutionSVG from "@/frontend/assets/images/play-hexagon.svg";
 
 const LandingPage: React.FC = () => {
     return (
@@ -10,7 +13,7 @@ const LandingPage: React.FC = () => {
             <section className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white min-h-screen flex items-center justify-center">
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-                        Accelarate your prototyping
+                        Accelerate your prototyping
                     </h1>
                     <p className="text-lg md:text-xl mb-8">
                         Build. Debug. Collaborate. All in one powerful platform.
@@ -40,21 +43,12 @@ const LandingPage: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {/* Feature 1 */}
                         <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                            <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-full bg-blue-500 text-white">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-8 w-8"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M9.75 3h-3a2.25 2.25 0 00-2.25 2.25v15A2.25 2.25 0 006.75 21h10.5a2.25 2.25 0 002.25-2.25v-15A2.25 2.25 0 0017.25 3h-3M9 7.5v.75m6-.75v.75M9 11.25v.75m6-.75v.75M9 15v.75m6-.75v.75m-9-9h6m-6 0v15m6-15v15"
-                                    />
-                                </svg>
+                            <div className="mb-6 flex items-center justify-center w-16 h-16">
+                                <img
+                                    src={InstantExecutionSVG.src}
+                                    alt="Instant Code Execution"
+                                    className="w-16 h-16"
+                                />
                             </div>
                             <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-200">
                                 Instant Code Execution
@@ -68,21 +62,12 @@ const LandingPage: React.FC = () => {
 
                         {/* Feature 2 */}
                         <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                            <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-full bg-orange-500 text-white">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-8 w-8"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M3 10h1.664m.827 4.013A7.001 7.001 0 1115.5 4.79m.5 9.705v.255m-1.663 3.462A7.001 7.001 0 016.001 8.038M5 10.5h5"
-                                    />
-                                </svg>
+                            <div className="mb-6 flex items-center justify-center w-16 h-16">
+                                <img
+                                    src={CodeTemplateSVG.src}
+                                    alt="Pre-Built Code Templates"
+                                    className="w-16 h-16"
+                                />
                             </div>
                             <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-200">
                                 Pre-Built Code Templates
@@ -96,21 +81,12 @@ const LandingPage: React.FC = () => {
 
                         {/* Feature 3 */}
                         <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                            <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-full bg-purple-500 text-white">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-8 w-8"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 10l1.5-3h5m1.67 3H15l1.5 3h-4l-1 2H5.5l-1-2H3l1-2h1.5m1 0h7m-7 0L6.5 7h5"
-                                    />
-                                </svg>
+                            <div className="mb-6 flex items-center justify-center w-16 h-16">
+                                <img
+                                    src={CollaborationSVG.src}
+                                    alt="Collaborative Community"
+                                    className="w-16 h-16"
+                                />
                             </div>
                             <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-200">
                                 Collaborative Community
@@ -174,7 +150,7 @@ console.log(greet("Scriptorium"));`}
                                 them with ease.
                             </p>
                             <Link
-                                href="/signup"
+                                href="/code"
                                 className="px-8 py-4 bg-blue-500 text-white font-bold text-lg rounded-md shadow-md hover:bg-blue-600 transition duration-300"
                             >
                                 Start Coding Now

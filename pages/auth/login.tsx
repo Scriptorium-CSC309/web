@@ -65,7 +65,7 @@ const LoginPage = () => {
                         type: "LOGIN",
                         payload: profileResponse.data,
                     });
-                    router.push("/"); 
+                    router.push("/code"); 
                 } else {
                     setError("Unable to fetch profile information.");
                 }

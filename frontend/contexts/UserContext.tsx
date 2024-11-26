@@ -1,6 +1,14 @@
 /* Reducers and contexts for managing a global user state for the frontend. */
 
-import { createContext, ReactNode, useReducer } from "react";
+import {
+    createContext,
+    ReactNode,
+    useEffect,
+    useReducer,
+    useState,
+} from "react";
+import api from "@/frontend/utils/api";
+import LoadingScreen from "@/frontend/components/LoadingScreen";
 
 /* Information about an authenticated user.*/
 export interface User {
@@ -42,11 +50,33 @@ const userReducer = (state: UserState, action: UserAction): UserState => {
 };
 
 export const StateContext = createContext<UserState>(null);
-export const DispatchContext = createContext<React.Dispatch<UserAction>>((_) => null);
+export const DispatchContext = createContext<React.Dispatch<UserAction>>(
+    (_) => null
+);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(userReducer, null);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        const initializeUser = async () => {
+            try {
+                const response = await api.get("/user/profile");
+                dispatch({ type: "LOGIN", payload: response.data });
+            } catch (err) {
+                console.error("Failed to initialize user:", err);
+            } finally {
+                setLoading(false); // Finish loading whether success or failure
+            }
+        };
+
+        initializeUser();
+    }, []);
+
+    // Show a loading indicator if user initialization is in progress
+    if (loading) {
+        return <LoadingScreen />;
+    }
     return (
         <StateContext.Provider value={state}>
             <DispatchContext.Provider value={dispatch}>

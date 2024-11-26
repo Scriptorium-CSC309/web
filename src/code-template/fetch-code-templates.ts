@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma";
 import Joi from "joi";
 import { Prisma } from "@prisma/client";
-import { formatTags, isAuthenticatedRequest } from "../utils";
+import { formatTags } from "../utils";
 import {
   MAX_CHARS_CONTENT,
   MAX_CHARS_TITLE_DESCRIPTION,
@@ -31,12 +31,10 @@ const getCodeTemplatesSchema = Joi.object({
     .min(MIN_PAGE_SIZE)
     .max(MAX_PAGE_SIZE)
     .default(PAGE_SIZE),
-  tags: Joi.alternatives(
-    Joi.string().max(MAX_CHARS_TITLE_DESCRIPTION),
-    Joi.array().items(Joi.string().max(MAX_CHARS_TITLE_DESCRIPTION))
-  ).optional(),
-  title: Joi.string().max(MAX_CHARS_TITLE_DESCRIPTION).optional(),
-  code: Joi.string().max(MAX_CHARS_CONTENT).optional(),
+  tags: Joi.array().single().items(Joi.string()).optional(),
+  title: Joi.string().max(MAX_CHARS_TITLE_DESCRIPTION).optional().allow(""),
+  code: Joi.string().max(MAX_CHARS_CONTENT).optional().allow(""),
+  description: Joi.string().optional().allow(""),
   userId: Joi.number().integer().optional(),
 });
 
@@ -44,8 +42,6 @@ async function getCodeTemplatesInteractor(
   req: AuthenticatedRequest | NextApiRequest,
   res: NextApiResponse<CodeTemplateData | Error>
 ) {
-  // TODO: consider if comments of hidden blogposts should be visible. Currently they are.
-
   if (req.method !== "GET") {
     res.status(405).json({ error: "Method not allowed" });
     return;
@@ -58,18 +54,17 @@ async function getCodeTemplatesInteractor(
       return;
     }
 
-    const { page, pageSize, title, code} = value;
+    const { page, pageSize, title, code, description} = value;
     let { tags, userId } = value;
 
     // Ensure `tags` is an array regardless of how it's provided
     tags = formatTags(tags);
 
-    if (isAuthenticatedRequest(req)) {userId = Number(req.user.userId)}
-
     // Construct the 'where' clause to filter comments by postId
     const filter: Prisma.CodeTemplateWhereInput = {
       ...(title && { title: { contains: title } }),
       ...(code && { code: { contains: code } }),
+      ...(description && {description: {contains: description}}),
       ...(tags.length > 0 && { tags: { some: { name: { in: tags } } } }),
       ...(userId && { userId: { equals: userId } }),
     };
@@ -90,6 +85,7 @@ async function getCodeTemplatesInteractor(
             id: true,
             name: true,
             email: true,
+            avatarId: true
           },
         },
         tags: {

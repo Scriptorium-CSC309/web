@@ -1,4 +1,3 @@
-import { withAuth } from "@/src/auth/middleware";
 import { AuthenticatedRequest } from "@/src/auth/utils";
 import saveCodeTemplateInteractor from "@/src/code-template/save-code-template";
 import type { NextApiResponse } from "next";
@@ -203,4 +202,5 @@ function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
-export default withAuth(handler);
+
+export default handler;

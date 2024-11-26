@@ -48,6 +48,12 @@ interface FailedQueueItem {
     reject: (error: AxiosError) => void;
 }
 
+/* Clear tokens and redirect to the login page.*/
+const redirectToLogin = () => {
+    clearTokens();
+    window.location.href = "auth/login"; // Replace "/login" with your login page route
+};
+
 /* Flag to indicate if a refresh operation is currently in progress. */
 let isRefreshing = false;
 
@@ -118,7 +124,7 @@ api.interceptors.response.use(
             const refreshToken = getRefreshToken();
             if (!refreshToken) {
                 clearTokens();
-                // TODO: consider redirecting to the login page
+                // redirectToLogin();
                 return Promise.reject(error);
             }
 
@@ -137,7 +143,7 @@ api.interceptors.response.use(
                     .catch((err) => {
                         processQueue(err, null);
                         clearTokens();
-                        // TODO: consider redirecting to the login page
+                        // redirectToLogin();
                         reject(err);
                     })
                     .finally(() => {

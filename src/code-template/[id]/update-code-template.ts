@@ -9,6 +9,7 @@ import {
     MAX_CHARS_TAG,
 } from "../../../constants";
 import { createOrUpdateTags } from "@/src/utils";
+import { withAuth } from "@/src/auth/middleware";
 
 type Error = {
     error: string;
@@ -18,15 +19,16 @@ type Data = {
     message: string;
 };
 
+const updateCodeTempateQuerySchema = Joi.object({
+    id: Joi.number().integer().required(),
+});
+
 const updateCodeTemplateSchema = Joi.object({
     title: Joi.string().min(MIN_CHARS).max(MAX_CHARS_TITLE_DESCRIPTION),
     description: Joi.string().min(MIN_CHARS).max(MAX_CHARS_TITLE_DESCRIPTION),
     code: Joi.string().max(MAX_CHARS_CONTENT),
+    language: Joi.string().min(2).max(50), 
     tags: Joi.array().items(Joi.string().min(MIN_CHARS).max(MAX_CHARS_TAG)),
-});
-
-const updateCodeTempateQuerySchema = Joi.object({
-    id: Joi.number().integer().required(),
 });
 
 async function updateCodeTemplateInteractor(
@@ -47,7 +49,7 @@ async function updateCodeTemplateInteractor(
     const userId = Number(req.user.userId);
 
     try {
-        const { title, description, code, tags } = bodyValue;
+        const { title, description, code, tags, language } = bodyValue; 
         const { id } = queryValue;
         const existingCodeTemplate = await prisma.codeTemplate.findUnique({
             where: { id },
@@ -65,6 +67,7 @@ async function updateCodeTemplateInteractor(
         if (title !== undefined) data.title = title;
         if (description !== undefined) data.description = description;
         if (code !== undefined) data.code = code;
+        if (language !== undefined) data.language = language; // Add language
 
         if (tags !== undefined) {
             const tagRecords = await createOrUpdateTags(
@@ -89,4 +92,4 @@ async function updateCodeTemplateInteractor(
     }
 }
 
-export default updateCodeTemplateInteractor;
+export default withAuth(updateCodeTemplateInteractor);
