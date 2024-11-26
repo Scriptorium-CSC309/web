@@ -44,8 +44,7 @@ const LandingPage: React.FC = () => {
                         {/* Feature 1 */}
                         <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                             <div className="mb-6 flex items-center justify-center w-16 h-16">
-                                <img
-                                    src={InstantExecutionSVG.src}
+                                <InstantExecutionSVG
                                     alt="Instant Code Execution"
                                     className="w-16 h-16"
                                 />
@@ -63,8 +62,7 @@ const LandingPage: React.FC = () => {
                         {/* Feature 2 */}
                         <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                             <div className="mb-6 flex items-center justify-center w-16 h-16">
-                                <img
-                                    src={CodeTemplateSVG.src}
+                                <CodeTemplateSVG
                                     alt="Pre-Built Code Templates"
                                     className="w-16 h-16"
                                 />
@@ -82,8 +80,7 @@ const LandingPage: React.FC = () => {
                         {/* Feature 3 */}
                         <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                             <div className="mb-6 flex items-center justify-center w-16 h-16">
-                                <img
-                                    src={CollaborationSVG.src}
+                                <CollaborationSVG
                                     alt="Collaborative Community"
                                     className="w-16 h-16"
                                 />
