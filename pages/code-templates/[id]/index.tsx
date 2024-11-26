@@ -2,12 +2,13 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Editor } from "@monaco-editor/react";
 import Avatar from "@/frontend/components/Avatar";
-import { FaCodeBranch } from "react-icons/fa";
+import { FaCodeBranch, FaTrashAlt } from "react-icons/fa";
 import api from "@/frontend/utils/api";
 import { languageToMonacoLanguage } from "@/frontend/utils/language-to-monaco-language";
 import { useTheme } from "next-themes";
 import { useNotification } from "@/frontend/contexts/NotificationContext";
 import { StateContext as UserStateContext } from "@/frontend/contexts/UserContext";
+import LoadingScreen from "@/frontend/components/LoadingScreen";
 
 const CodeTemplatePage = () => {
     const router = useRouter();
@@ -15,7 +16,6 @@ const CodeTemplatePage = () => {
     const { theme } = useTheme();
     const { showNotification } = useNotification();
     const user = useContext(UserStateContext);
-    console.log(user);
 
     const [templateData, setTemplateData] = useState<{
         title: string;
@@ -32,6 +32,7 @@ const CodeTemplatePage = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
+    const [showModal, setShowModal] = useState(false); // For confirmation modal
 
     useEffect(() => {
         if (id) {
@@ -52,14 +53,11 @@ const CodeTemplatePage = () => {
         }
 
         try {
-            // Step 1: Fetch the original template data
             const { data: templateData } = await api.get(
                 `/code-template/${id}`
             );
-
-            // Step 2: Create a new template with the fetched data
             const { data: newTemplate } = await api.post(`/code-template`, {
-                title: `${templateData.title} (Forked)`, // Append "Forked" to the title for clarity
+                title: `${templateData.title} (Forked)`,
                 description: templateData.description,
                 tags: templateData.tags.map(
                     (tag: { name: string }) => tag.name
@@ -68,7 +66,6 @@ const CodeTemplatePage = () => {
                 language: templateData.language,
             });
 
-            // Step 3: Redirect to /code with the new template ID and show a notification
             showNotification("Forked Successfully", "success", 10000);
             router.push(`/code?templateId=${newTemplate.id}`);
         } catch (err: any) {
@@ -80,9 +77,22 @@ const CodeTemplatePage = () => {
         }
     };
 
-    // Early returns for loading and error states
+    const handleDelete = async () => {
+        try {
+            await api.delete(`/code-template/${id}`);
+            showNotification("Template deleted successfully.", "success");
+            router.push("/code-templates");
+        } catch (err) {
+            console.error("Failed to delete template:", err);
+            showNotification(
+                "Failed to delete template. Please try again.",
+                "error"
+            );
+        }
+    };
+
     if (isLoading) {
-        return <div className="text-center mt-10">Loading...</div>;
+        return <LoadingScreen />;
     }
 
     if (error || !templateData) {
@@ -114,17 +124,28 @@ const CodeTemplatePage = () => {
                             </p>
                         </div>
                     </div>
-                    <button
-                        onClick={handleFork}
-                        className={`flex items-center gap-2 px-5 py-2 rounded-md ${
-                            user
-                                ? "bg-green-600 text-white hover:bg-green-700"
-                                : "bg-gray-600 text-white"
-                        }`}
-                    >
-                        <FaCodeBranch />
-                        <span>Fork</span>
-                    </button>
+                    <div className="flex items-center gap-4">
+                        {user && user.id === templateData.user.id && (
+                            <button
+                                onClick={() => setShowModal(true)}
+                                className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                            >
+                                <FaTrashAlt />
+                                <span>Delete</span>
+                            </button>
+                        )}
+                        <button
+                            onClick={handleFork}
+                            className={`flex items-center gap-2 px-5 py-2 rounded-md ${
+                                user
+                                    ? "bg-green-600 text-white hover:bg-green-700"
+                                    : "bg-gray-600 text-white"
+                            }`}
+                        >
+                            <FaCodeBranch />
+                            <span>Fork</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Tags */}
@@ -180,6 +201,38 @@ const CodeTemplatePage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Confirmation Modal */}
+            {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                            Confirm Deletion
+                        </h2>
+                        <p className="text-gray-700 dark:text-gray-300 mb-6">
+                            Are you sure you want to delete this template? This
+                            action cannot be undone.
+                        </p>
+                        <div className="flex justify-end gap-4">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-md"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowModal(false);
+                                    handleDelete();
+                                }}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
