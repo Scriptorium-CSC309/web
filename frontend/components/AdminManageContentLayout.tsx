@@ -7,7 +7,7 @@ import api from "../utils/api";
 interface AdminManageContentLayoutProps {
     children: React.ReactNode;
     totalPages: number;
-    onUpdate?: () => void;
+    onUpdate?: (query: string, page: number) => void;
   }
 
 const AdminManageContentLayout: React.FC<AdminManageContentLayoutProps> = ({ children, totalPages, onUpdate }) => {
@@ -23,8 +23,8 @@ const AdminManageContentLayout: React.FC<AdminManageContentLayoutProps> = ({ chi
     };
 
     useEffect(() => {
-        onUpdate && onUpdate();
-    }, [searchQuery, tags, page]);
+        onUpdate && onUpdate(searchQuery, page);
+    }, [searchQuery, page]);
 
     return (
         <><div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6">
