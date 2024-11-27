@@ -294,7 +294,7 @@ const BlogPostPage = () => {
           }}
           className="ml-4 w-1/20 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
         >
-          <option value="">Sort by...</option>
+          <option value="">Sort by Time</option>
           <option value="valued">Sort by Valued</option>
           <option value="controversial">Sort by Controversial</option>
         </select>
