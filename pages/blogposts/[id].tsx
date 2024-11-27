@@ -8,7 +8,7 @@ import { StateContext as UserStateContext } from '@/frontend/contexts/UserContex
 interface BlogPost {
   id: string;
   title: string;
-  authorId: number;
+  userId: number;
   authorName?: string;
   postedAt: string;
   content: string;
@@ -20,9 +20,7 @@ interface BlogPost {
 interface Comment {
   id: string;
   content: string;
-  user: {
-    name: string;
-  };
+  userId: number;
   upvotes: number;
   downvotes: number;
   replies?: Comment[];
@@ -36,17 +34,16 @@ const BlogPostPage = () => {
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
-  const [replyCommentId, setReplyCommentId] = useState<string | null>(null);
-  const [replyContent, setReplyContent] = useState<string>('');
 
   useEffect(() => {
     if (id) {
-      // Fetch the blog post data by id
+      console.log('Fetching blog post data for ID:', id);
       api.get(`/blogposts/${id}?t=${new Date().getTime()}`)
         .then((res) => {
           const postData = res.data;
-          if (postData.authorId) {
-            api.get(`/users/${postData.authorId}`).then((userRes) => {
+          console.log('Blog post data fetched:', postData);
+          if (postData.userId) {
+            api.get(`/user/profile/${postData.userId}`).then((userRes) => {
               setBlogPost({ ...postData, authorName: userRes.data.name });
               setComments(postData.comments || []);
             }).catch((err) => {
@@ -59,13 +56,63 @@ const BlogPostPage = () => {
             setComments(postData.comments || []);
           }
         })
-        .catch((err) => console.error('Failed to fetch blog post:', err));
+        .catch((err) => {
+          console.error('Failed to fetch blog post:', err);
+        });
     }
   }, [id]);
 
   if (!blogPost) {
     return <div>Loading...</div>;
   }
+    // Function to fetch user names for each comment
+    const fetchCommentsWithUserNames = async (comments: Comment[]) => {
+      const updatedComments = await Promise.all(
+        comments.map(async (comment) => {
+          if (comment.userId) {
+            try {
+              const userResponse = await api.get(`/user/profile/${comment.userId}`);
+              return { ...comment, user: { name: userResponse.data.name } };
+            } catch (error) {
+              console.error(`Failed to fetch user for comment ID ${comment.id}:`, error);
+              return comment; // Return the original comment if there's an error
+            }
+          }
+          return comment;
+        })
+      );
+      setComments(updatedComments);
+    };
+    
+  
+
+  const handleAddComment = async () => {
+    if (!user) {
+      router.push('/auth/login');
+      return;
+    }
+    if (newComment.trim()) {
+      try {
+        console.log('Attempting to add comment:', newComment);
+        const response = await api.post(`/comments`, {
+          postId: blogPost.id,
+          content: newComment,
+        });
+        console.log('Add comment response:', response);
+        if (response.status === 201) {
+          const userResponse = await api.get(`/user/profile/${user.id}`);
+          const newCommentWithUser = { ...response.data, user: { name: userResponse.data.name } };
+          setComments((prevComments) => [...prevComments, newCommentWithUser]);
+          setNewComment('');
+          console.log('Comment added successfully');
+        } else {
+          console.error('Failed to add comment');
+        }
+      } catch (error) {
+        console.error('Error adding comment:', error);
+      }
+    }
+  };
 
   const handleVote = async (type: 'upvote' | 'downvote') => {
     if (!user) {
@@ -150,65 +197,6 @@ const BlogPostPage = () => {
     }
   };
 
-  const handleAddComment = async () => {
-    if (!user) {
-      router.push('/auth/login');
-      return;
-    }
-    if (newComment.trim()) {
-      try {
-        const response = await api.post(`/blogposts/${blogPost.id}/comments`, {
-          content: newComment,
-        });
-        if (response.status === 201) {
-          setComments([...comments, response.data]);
-          setNewComment('');
-        } else {
-          console.error('Failed to add comment');
-        }
-      } catch (error) {
-        console.error('Error adding comment:', error);
-      }
-    }
-  };
-
-  const handleReplyToComment = (commentId: string) => {
-    if (!user) {
-      router.push('/auth/login');
-      return;
-    }
-    setReplyCommentId(commentId);
-  };
-
-  const handleAddReply = async () => {
-    if (!user) {
-      router.push('/auth/login');
-      return;
-    }
-    if (replyContent.trim() && replyCommentId) {
-      try {
-        const response = await api.post(`/comments/${replyCommentId}/replies`, {
-          content: replyContent,
-        });
-        if (response.status === 201) {
-          setComments((prevComments) =>
-            prevComments.map((comment) =>
-              comment.id === replyCommentId
-                ? { ...comment, replies: [...(comment.replies || []), response.data] }
-                : comment
-            )
-          );
-          setReplyContent('');
-          setReplyCommentId(null);
-        } else {
-          console.error('Failed to add reply');
-        }
-      } catch (error) {
-        console.error('Error adding reply:', error);
-      }
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white transition duration-500">
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -269,7 +257,9 @@ const BlogPostPage = () => {
               <div key={comment.id} className="border-b border-gray-300 dark:border-gray-700 py-4">
                 <p className="text-md mb-2 leading-relaxed text-gray-800 dark:text-gray-300">{comment.content}</p>
                 <div className="flex items-center space-x-4">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">By {comment.user.name}</p>
+
+                //Author Name
+
                   <div className="flex items-center space-x-2">
                     <button
                       className="text-green-600 hover:text-green-700 transition duration-300"
@@ -291,30 +281,6 @@ const BlogPostPage = () => {
                     </button>
                   </div>
                 </div>
-                {/* Reply Section */}
-                <button
-                  className="text-blue-600 hover:underline mt-2"
-                  onClick={() => handleReplyToComment(comment.id)}
-                >
-                  Reply
-                </button>
-                {replyCommentId === comment.id && (
-                  <div className="mt-4">
-                    <textarea
-                      className="w-full p-4 rounded-md border border-gray-300 dark:border-gray-700 mb-2 dark:bg-gray-800 dark:text-white"
-                      rows={2}
-                      placeholder="Write a reply..."
-                      value={replyContent}
-                      onChange={(e) => setReplyContent(e.target.value)}
-                    />
-                    <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow-lg"
-                      onClick={handleAddReply}
-                    >
-                      Add Reply
-                    </button>
-                  </div>
-                )}
               </div>
             ))
           ) : (

@@ -6,9 +6,14 @@ interface BlogPost {
   id: string;
   title: string;
   description: string;
-  author: string;
+  userId: string;
   postedAt: string;
-  category: string;
+  tags: { id: string; name: string }[];
+}
+
+interface Author {
+  userId: string;
+  name: string;
 }
 
 const BlogPostsPage: React.FC = () => {
@@ -16,9 +21,10 @@ const BlogPostsPage: React.FC = () => {
   const { theme, setTheme } = useTheme();
 
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [authorNames, setAuthorNames] = useState<{ [key: string]: string }>({});
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch blog posts from the API
@@ -30,9 +36,7 @@ const BlogPostsPage: React.FC = () => {
           throw new Error('Failed to fetch blog posts');
         }
         const data = await res.json();
-        console.log("Fetched Blog Posts:", data); // Inspect the structure here
 
-        // Adjust based on the structure of the response
         if (Array.isArray(data.posts)) {
           setBlogPosts(data.posts);
           setFilteredPosts(data.posts);
@@ -40,12 +44,12 @@ const BlogPostsPage: React.FC = () => {
           setBlogPosts(data);
           setFilteredPosts(data);
         } else {
-          console.error("Unexpected data format:", data);
+          console.error('Unexpected data format:', data);
           setBlogPosts([]);
           setFilteredPosts([]);
         }
       } catch (err: any) {
-        console.error("Error fetching blog posts:", err.message);
+        console.error('Error fetching blog posts:', err.message);
         setBlogPosts([]);
         setFilteredPosts([]);
       } finally {
@@ -56,22 +60,68 @@ const BlogPostsPage: React.FC = () => {
     fetchBlogPosts();
   }, []);
 
+  // Fetch author names for each blog post
+  useEffect(() => {
+    const fetchAuthorNames = async () => {
+      const uniqueAuthorIds = [...new Set(blogPosts.map((post) => post.id).filter((id) => !isNaN(Number(id))))];
+      console.log('Unique Author IDs:', uniqueAuthorIds); // Log the IDs to check if they are correct
+
+      const authorPromises = uniqueAuthorIds.map(async (userId) => {
+        try {
+          console.log(`Fetching author with ID: ${userId}`); // Log each ID before making the request
+
+          // Use the correct API URL with the appropriate port
+          const res = await fetch(`/api/user/profile/${userId}`);
+          if (!res.ok) {
+            throw new Error(`Failed to fetch user with ID ${userId}`);
+          }
+          const { name } = await res.json();
+          console.log(`Fetched user name: ${name} for ID: ${userId}`); // Log the response
+          return { id: userId, name };
+        } catch (err: any) {
+          console.error('Error fetching author:', err.message);
+          return { id: userId, name: 'Unknown Author' };
+        }
+      });
+
+      const authors = await Promise.all(authorPromises);
+      const authorMap = authors.reduce((map, author) => {
+        map[author.id] = author.name;
+        return map;
+      }, {} as { [key: string]: string });
+
+      console.log('Author map:', authorMap); // Log the final author map to verify
+      setAuthorNames(authorMap);
+    };
+
+    if (blogPosts.length > 0) {
+      fetchAuthorNames();
+    }
+  }, [blogPosts]);
+
+  // Extract unique tags from blog posts
+  const uniqueTags = useMemo(() => {
+    const tagsSet = new Set<string>();
+    blogPosts.forEach((post) => {
+      post.tags.forEach((tag) => tagsSet.add(tag.name));
+    });
+    return Array.from(tagsSet); // Convert Set to Array
+  }, [blogPosts]);
+
   // Debounce search term to improve performance
   useEffect(() => {
     const handler = setTimeout(() => {
       filterPosts();
-    }, 300); // 300ms debounce delay
+    }, 300);
 
     return () => {
       clearTimeout(handler);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, selectedCategory, blogPosts]);
+  }, [searchTerm, selectedTag, blogPosts]);
 
-  // Function to filter posts based on search term and selected category
   const filterPosts = () => {
     if (!Array.isArray(blogPosts)) {
-      console.error("blogPosts is not an array:", blogPosts);
+      console.error('blogPosts is not an array:', blogPosts);
       setFilteredPosts([]);
       return;
     }
@@ -84,24 +134,23 @@ const BlogPostsPage: React.FC = () => {
       );
     }
 
-    if (selectedCategory) {
-      filtered = filtered.filter((post) => post.category === selectedCategory);
+    if (selectedTag) {
+      filtered = filtered.filter((post) =>
+        post.tags.some((tag) => tag.name === selectedTag)
+      );
     }
 
     setFilteredPosts(filtered);
   };
 
-  // Memoize the filtered posts to prevent unnecessary re-renders
   const memoizedFilteredPosts = useMemo(() => filteredPosts, [filteredPosts]);
 
   const handleCreateNewPost = () => {
     router.push('/blogposts/create');
   };
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory((prevCategory) =>
-      prevCategory === category ? null : category
-    );
+  const handleTagClick = (tag: string) => {
+    setSelectedTag((prevTag) => (prevTag === tag ? null : tag));
   };
 
   return (
@@ -131,24 +180,22 @@ const BlogPostsPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Popular Categories */}
+      {/* Tags */}
       <div className="mb-10">
         <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">
-          Popular Categories
+          Tags
         </h2>
         <div className="flex flex-wrap gap-3 justify-center">
-          {['Python', 'Java', 'Javascript', 'C', 'PHP'].map((category) => (
+          {uniqueTags.map((tag) => (
             <button
-              key={category}
-              onClick={() => handleCategoryClick(category)}
-              aria-pressed={selectedCategory === category}
+              key={tag}
+              onClick={() => handleTagClick(tag)}
+              aria-pressed={selectedTag === tag}
               className={`bg-blue-500 hover:bg-blue-600 dark:bg-blue-400 dark:hover:bg-blue-500 text-white font-medium py-2 px-5 rounded-full shadow-sm transition-transform transform hover:scale-105 ${
-                selectedCategory === category
-                  ? 'ring-2 ring-offset-2 ring-blue-300'
-                  : ''
+                selectedTag === tag ? 'ring-2 ring-offset-2 ring-blue-300' : ''
               }`}
             >
-              {category}
+              {tag}
             </button>
           ))}
         </div>
@@ -175,12 +222,27 @@ const BlogPostsPage: React.FC = () => {
               </p>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  By {post.author} on{' '}
+                  By {authorNames[post.userId] || 'Unknown Author'} on{' '}
                   {new Date(post.postedAt).toLocaleDateString()}
                 </p>
                 <p className="text-sm text-blue-500 dark:text-blue-400">
-                  {post.category}
                 </p>
+              </div>
+              {/* Display Tags */}
+              <div className="mt-4">
+                <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Tags:
+                </h4>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {post.tags.map((tag, index) => (
+                    <span
+                      key={tag.id || index}
+                      className="px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-blue-300 rounded-lg text-sm font-medium"
+                    >
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))

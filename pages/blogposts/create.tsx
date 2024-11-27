@@ -3,7 +3,6 @@
 import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import withAuth from '@/frontend/utils/auth'; // Adjust the path as needed
-import { StateContext } from '@/frontend/contexts/UserContext';
 import { getAccessToken } from '@/frontend/utils/token-storage';
 
 const CreateBlogPostPage: React.FC = () => {
@@ -45,7 +44,7 @@ const CreateBlogPostPage: React.FC = () => {
     e.preventDefault();
 
     // Validate required fields
-    if (!title || !description || !content || !category) {
+    if (!title || !description || !content) {
       setError('All fields are required.');
       return;
     }
@@ -55,8 +54,7 @@ const CreateBlogPostPage: React.FC = () => {
 
     if (!token) {
       setError('You must be logged in to create a blog post.');
-      // Optionally, redirect to the login page
-      // router.push('/auth/login');
+
       return;
     }
 
@@ -195,25 +193,7 @@ const CreateBlogPostPage: React.FC = () => {
           />
         </div>
 
-        {/* Category Field (Text Input) */}
-        <div className="mb-6">
-          <label
-            htmlFor="category"
-            className="block text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200"
-          >
-            Category
-          </label>
-          <input
-            id="category"
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            placeholder="Enter the category"
-            required
-          />
-        </div>
-
+        
         {/* Tags Field */}
         <div className="mb-6">
           <label
