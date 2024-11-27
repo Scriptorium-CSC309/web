@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/router';
-import { useTheme } from 'next-themes';
-import { SORT_BY_OPTIONS } from '@/constants';
+import React, { useState, useEffect, useMemo, useContext } from "react";
+import { useRouter } from "next/router";
+import { useTheme } from "next-themes";
+import { SORT_BY_OPTIONS } from "@/constants";
 import api from "@/frontend/utils/api";
+import { StateContext as UserStateContext } from "@/frontend/contexts/UserContext";
+import { FaUser } from "react-icons/fa";
 
 interface BlogPost {
   id: string;
@@ -13,6 +15,10 @@ interface BlogPost {
   tags: { id: string; name: string }[];
   upvotes: number;
   downvotes: number;
+  user: {
+    id: number;
+    name: string;
+  }
 }
 
 interface Author {
@@ -27,10 +33,12 @@ const BlogPostsPage: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [authorNames, setAuthorNames] = useState<{ [key: string]: string }>({});
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortBy, setSortBy] = useState('');
+  const [sortBy, setSortBy] = useState("");
+  const [showMyBlogPosts, setshowMyBlogPosts] = useState(false);
+  const userContext = useContext(UserStateContext);
 
   // Fetch blog posts from the API
   useEffect(() => {
@@ -38,7 +46,8 @@ const BlogPostsPage: React.FC = () => {
       try {
         const params = {
           sortBy,
-        }
+          showMyBlogPosts,
+        };
         const { data } = await api.get("/blogposts", { params });
         if (Array.isArray(data.posts)) {
           setBlogPosts(data.posts);
@@ -47,12 +56,12 @@ const BlogPostsPage: React.FC = () => {
           setBlogPosts(data);
           setFilteredPosts(data);
         } else {
-          console.error('Unexpected data format:', data);
+          console.error("Unexpected data format:", data);
           setBlogPosts([]);
           setFilteredPosts([]);
         }
       } catch (err: any) {
-        console.error('Error fetching blog posts:', err.message);
+        console.error("Error fetching blog posts:", err.message);
         setBlogPosts([]);
         setFilteredPosts([]);
       } finally {
@@ -61,43 +70,47 @@ const BlogPostsPage: React.FC = () => {
     };
 
     fetchBlogPosts();
-  }, [sortBy]);
+  }, [sortBy, showMyBlogPosts]);
 
   // Fetch author names for each blog post
-  useEffect(() => {
-    const fetchAuthorNames = async () => {
-      const uniqueAuthorIds = [...new Set(blogPosts.map((post) => post.id).filter((id) => !isNaN(Number(id))))];
-      console.log('Unique Author IDs:', uniqueAuthorIds); // Log the IDs to check if they are correct
+  // useEffect(() => {
+  //   const fetchAuthorNames = async () => {
+  //     const uniqueAuthorIds = [
+  //       ...new Set(
+  //         blogPosts.map((post) => post.id).filter((id) => !isNaN(Number(id)))
+  //       ),
+  //     ];
+  //     console.log("Unique Author IDs:", uniqueAuthorIds); // Log the IDs to check if they are correct
 
-      const authorPromises = uniqueAuthorIds.map(async (userId) => {
-        try {
-          console.log(`Fetching author with ID: ${userId}`); // Log each ID before making the request
+  //     const authorPromises = uniqueAuthorIds.map(async (userId) => {
+  //       try {
+  //         console.log(`Fetching author with ID: ${userId}`); // Log each ID before making the request
 
-          // Use the correct API URL with the appropriate port
-          const {data} = await api.get(`/api/user/profile/${userId}`);
-          const { name } = await data.name;
-          console.log(`Fetched user name: ${name} for ID: ${userId}`); // Log the response
-          return { id: userId, name };
-        } catch (err: any) {
-          console.error('Error fetching author:', err.message);
-          return { id: userId, name: 'Unknown Author' };
-        }
-      });
+  //         // Use the correct API URL with the appropriate port
+  //         const { data } = await api.get(`/api/user/profile/${userId}`);
+  //         const { name } = await data.name;
+  //         console.log(`Fetched user name: ${name} for ID: ${userId}`); // Log the response
+  //         return { id: userId, name };
+  //       } catch (err: any) {
+  //         console.error("Error fetching author:", err.message);
+  //         return { id: userId, name: "Unknown Author" };
+  //       }
+  //     });
 
-      const authors = await Promise.all(authorPromises);
-      const authorMap = authors.reduce((map, author) => {
-        map[author.id] = author.name;
-        return map;
-      }, {} as { [key: string]: string });
+  //     const authors = await Promise.all(authorPromises);
+  //     const authorMap = authors.reduce((map, author) => {
+  //       map[author.id] = author.name;
+  //       return map;
+  //     }, {} as { [key: string]: string });
 
-      console.log('Author map:', authorMap); // Log the final author map to verify
-      setAuthorNames(authorMap);
-    };
+  //     console.log("Author map:", authorMap); // Log the final author map to verify
+  //     setAuthorNames(authorMap);
+  //   };
 
-    if (blogPosts.length > 0) {
-      fetchAuthorNames();
-    }
-  }, [blogPosts]);
+  //   if (blogPosts.length > 0) {
+  //     fetchAuthorNames();
+  //   }
+  // }, [blogPosts]);
 
   // Extract unique tags from blog posts
   const uniqueTags = useMemo(() => {
@@ -121,14 +134,14 @@ const BlogPostsPage: React.FC = () => {
 
   const filterPosts = () => {
     if (!Array.isArray(blogPosts)) {
-      console.error('blogPosts is not an array:', blogPosts);
+      console.error("blogPosts is not an array:", blogPosts);
       setFilteredPosts([]);
       return;
     }
 
     let filtered = blogPosts;
 
-    if (searchTerm.trim() !== '') {
+    if (searchTerm.trim() !== "") {
       filtered = filtered.filter((post) =>
         post.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -146,7 +159,7 @@ const BlogPostsPage: React.FC = () => {
   const memoizedFilteredPosts = useMemo(() => filteredPosts, [filteredPosts]);
 
   const handleCreateNewPost = () => {
-    router.push('/blogposts/create');
+    router.push("/blogposts/create");
   };
 
   const handleTagClick = (tag: string) => {
@@ -183,19 +196,46 @@ const BlogPostsPage: React.FC = () => {
             const value = e.target.value;
             if (value === SORT_BY_OPTIONS.valued) {
               setSortBy(SORT_BY_OPTIONS.valued);
-            } else if (value === 'controversial') {
+            } else if (value === "controversial") {
               setSortBy(SORT_BY_OPTIONS.controversial);
             } else {
-              setSortBy('');
+              setSortBy("");
             }
-            }}
-            className="ml-4 w-1/20 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          >
+          }}
+          className="ml-4 w-1/20 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+        >
           <option value="">Sort by...</option>
           <option value="valued">Sort by Valued</option>
           <option value="controversial">Sort by Controversial</option>
         </select>
+        {userContext && (
+        <button
+          onClick={() => setshowMyBlogPosts((prev) => !prev)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium ml-4 ${
+            showMyBlogPosts
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+          }`}
+        >
+          <FaUser />
+          {showMyBlogPosts ? (
+            <>
+              <span className="block md:hidden">Mine</span>
+              <span className="hidden md:block">My Templates</span>
+            </>
+          ) : (
+            <>
+              <span className="block md:hidden">All</span>
+              <span className="hidden md:block">All Templates</span>
+            </>
+          )}
+        </button>
+      )}
       </div>
+
+      {/* Show My Blog Posts button */}
+
+
 
       {/* Tags */}
       <div className="mb-10">
@@ -209,7 +249,7 @@ const BlogPostsPage: React.FC = () => {
               onClick={() => handleTagClick(tag)}
               aria-pressed={selectedTag === tag}
               className={`bg-blue-500 hover:bg-blue-600 dark:bg-blue-400 dark:hover:bg-blue-500 text-white font-medium py-2 px-5 rounded-full shadow-sm transition-transform transform hover:scale-105 ${
-                selectedTag === tag ? 'ring-2 ring-offset-2 ring-blue-300' : ''
+                selectedTag === tag ? "ring-2 ring-offset-2 ring-blue-300" : ""
               }`}
             >
               {tag}
@@ -251,11 +291,10 @@ const BlogPostsPage: React.FC = () => {
               </p>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  By {authorNames[post.userId] || 'Unknown Author'} on{' '}
+                  By {post.user.name} on{" "}
                   {new Date(post.postedAt).toLocaleDateString()}
                 </p>
-                <p className="text-sm text-blue-500 dark:text-blue-400">
-                </p>
+                <p className="text-sm text-blue-500 dark:text-blue-400"></p>
               </div>
               {/* Display Tags */}
               <div className="mt-4">
