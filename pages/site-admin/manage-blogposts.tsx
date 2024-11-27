@@ -12,9 +12,11 @@ import withAuth from "@/frontend/utils/auth";
 import InfoCard from "@/frontend/components/InfoCard";
 import AdminPortalLayout from "@/frontend/components/AdminPortalLayout";
 import BlogPostCard from "@/frontend/components/BlogPostCard";
+import { ITEMS_PER_PAGE } from "@/constants";
 
 const ManageBlogPosts = () => {
     const [blogPosts, setBlogPosts] = useState([]);
+    const [reportedMode, setreportedMode] = useState(false);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [tags, setTags] = useState<string[]>([]);
@@ -27,13 +29,35 @@ const ManageBlogPosts = () => {
         try {
             const params = {
                 page,
-                pageSize: 10,
+                pageSize: ITEMS_PER_PAGE,
                 tags: tags.length > 0 ? tags.join() : undefined,
                 search: searchQuery,
             };
             const { data } = await api.get("/blogposts", { params });
             setBlogPosts(data.posts);
             setTotalPages(Math.ceil(data.total / data.pageSize));
+        } catch (err) {
+            console.error("Failed to fetch blog posts", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const toggleReportedMode = async () => {
+        setLoading(true);
+        try {
+            if (reportedMode) {
+                // Fetch all blog posts
+                await fetchBlogPosts();
+                setreportedMode(false);
+            } else {
+                // Fetch only reported blog posts
+                const params = { page, pageSize: ITEMS_PER_PAGE, sort: "desc" };
+                const { data } = await api.get("/blogposts/inappropriate", { params });
+                setBlogPosts(data.blogPosts);
+                setreportedMode(true);
+                setTotalPages(Math.ceil(data.total / data.pageSize));
+            }
         } catch (err) {
             console.error("Failed to fetch blog posts", err);
         } finally {
@@ -65,6 +89,7 @@ const ManageBlogPosts = () => {
         <AdminPortalLayout>
             {/* Search and Filtering Section */}
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6">
+            <h3 className="text-2xl font-semibold text-center mb-10 dark:text-white">Manage Blog Posts</h3>
                 <div className="flex items-center bg-gray-100 dark:bg-gray-700 p-2 rounded-lg w-full md:w-1/2 mx-auto mb-4">
                     <HiOutlineSearch className="text-gray-400 ml-2" />
                     <input
@@ -96,22 +121,30 @@ const ManageBlogPosts = () => {
                     >
                         Add Tag
                     </button>
+                    <button
+                        onClick={toggleReportedMode}
+                        className={`ml-2 px-4 py-2 text-white rounded-lg ${reportedMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-red-600 hover:bg-red-700'}`}
+                    >
+                        {reportedMode ? "Show All" : "Show Reported"}
+                    </button>
                 </div>
             </div>
 
             {/* Blog Posts Section */}
             <div className="mt-8">
-                <h3 className="text-2xl font-semibold text-center">Manage Blog Posts</h3>
                 {loading ? (
                     <p className="text-center text-gray-500 dark:text-gray-400">Loading blog posts...</p>
                 ) : blogPosts.length === 0 ? (
                     <p className="text-center text-gray-500 dark:text-gray-400">No blog posts found.</p>
                 ) : (
                     <div>
-                        {blogPosts.map((post: any) => (
-                            <BlogPostCard key={post.id} blogpost={post}
-                            />
-                        ))}
+                        {blogPosts.filter((post: any) => !reportedMode || post.reportCount > 0).length === 0 ? (
+                            <p className="text-center text-gray-500 dark:text-gray-400">No reported blog posts.</p>
+                        ) : (
+                            blogPosts
+                            .filter((post: any) => !reportedMode || post.reportCount > 0)
+                            .map((post: any) => <BlogPostCard key={post.id} blogpost={post} />)
+                        )}
                     </div>
                 )}
                 <div className="flex justify-between items-center mt-6">

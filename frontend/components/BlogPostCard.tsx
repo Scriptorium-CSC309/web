@@ -10,6 +10,7 @@ interface BlogPostCardProps {
         postedAt: string;
         upvotes: number;
         downvotes: number;
+        reportCount: number;
     };
 }
 
@@ -44,6 +45,14 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({blogpost}) => {
             &#x1F44E; {blogpost.downvotes}
           </span>
         </div>
+        {blogpost.reportCount && (
+          <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
+            <div className="text-center">
+              <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">Reports</h3>
+              <p className="text-xl font-bold text-red-600 dark:text-red-400">{blogpost.reportCount}</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
