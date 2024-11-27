@@ -74,11 +74,8 @@ const BlogPostsPage: React.FC = () => {
           console.log(`Fetching author with ID: ${userId}`); // Log each ID before making the request
 
           // Use the correct API URL with the appropriate port
-          const res = await fetch(`/api/user/profile/${userId}`);
-          if (!res.ok) {
-            throw new Error(`Failed to fetch user with ID ${userId}`);
-          }
-          const { name } = await res.json();
+          const {data} = await api.get(`/api/user/profile/${userId}`);
+          const { name } = await data.name;
           console.log(`Fetched user name: ${name} for ID: ${userId}`); // Log the response
           return { id: userId, name };
         } catch (err: any) {
