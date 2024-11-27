@@ -106,6 +106,8 @@ async function handler(
             tags: post.tags.map((tag) => tag.name), // Extract tag names
             blogID: post.id, // Assuming blogID is the same as id
             reportCount: post.blogPostReports.length, // Count reports
+            upvotes: post.upvotes,
+            downvotes: post.downvotes,
         }));
         
         res.status(200).json({
