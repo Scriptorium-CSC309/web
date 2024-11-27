@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from 'react';
 import { FaThumbsUp, FaThumbsDown, FaFlag } from 'react-icons/fa';
 import api from '@/frontend/utils/api';
 import { StateContext as UserStateContext } from '@/frontend/contexts/UserContext';
+import { SORT_BY_OPTIONS } from '@/constants';
 
 // Define types for BlogPost and Comment
 interface BlogPost {
@@ -37,6 +38,7 @@ const BlogPostPage = () => {
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>("");
 
   // Function to fetch user names for each comment
   const fetchCommentsWithUserNames = async (comments: Comment[]) => {
@@ -56,6 +58,21 @@ const BlogPostPage = () => {
     );
     setComments(updatedComments);
   };
+
+  const fetchSortedComments = async () => {
+    try {
+      const { data } = await api.get(`/comments?postId=${id}&sortBy=${sortBy}`);
+      const sortedComments = data.comments
+      console.log('Sorted comments:', sortedComments);
+      setComments(sortedComments);
+    } catch (error) {
+      console.error('Failed to fetch sorted comments:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchSortedComments();
+  }, [sortBy]);
 
   // Function to fetch blog post data along with comments
   const fetchBlogPost = async () => {
@@ -264,6 +281,23 @@ const BlogPostPage = () => {
           >
             Add Comment
           </button>
+          <select
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === SORT_BY_OPTIONS.valued) {
+              setSortBy(SORT_BY_OPTIONS.valued);
+            } else if (value === "controversial") {
+              setSortBy(SORT_BY_OPTIONS.controversial);
+            } else {
+              setSortBy("");
+            }
+          }}
+          className="ml-4 w-1/20 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+        >
+          <option value="">Sort by...</option>
+          <option value="valued">Sort by Valued</option>
+          <option value="controversial">Sort by Controversial</option>
+        </select>
         </div>
 
         {/* Comments Section */}
