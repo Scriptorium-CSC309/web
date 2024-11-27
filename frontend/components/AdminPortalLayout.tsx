@@ -12,7 +12,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const sidebarItems = [
     { id: "Admin Home", label: "Admin Home", route: "/site-admin" },
     { id: "Manage Posts", label: "Manage Posts", route: "/site-admin/manage-blogposts" },
-    { id: "Manage Code Templates", label: "Manage Code Templates", route: "/site-admin/manage-templates" }
+    { id: "Manage Comments", label: "Manage Comments", route: "/site-admin/manage-comments" }
   ];
 
   useEffect(() => {

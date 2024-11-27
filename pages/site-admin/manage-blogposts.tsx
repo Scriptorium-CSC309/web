@@ -11,7 +11,7 @@ import { HiOutlinePencil, HiOutlineSearch } from "react-icons/hi";
 import withAuth from "@/frontend/utils/auth";
 import InfoCard from "@/frontend/components/InfoCard";
 import AdminPortalLayout from "@/frontend/components/AdminPortalLayout";
-import BlogPostCard from "@/frontend/components/BlogPostCard";
+import BlogPostCard from "@/frontend/components/BlogPostOrCommentCard";
 import { ITEMS_PER_PAGE } from "@/constants";
 
 const ManageBlogPosts = () => {
