@@ -41,6 +41,15 @@ const BlogPostPage = () => {
     const [newComment, setNewComment] = useState<string>("");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const { showNotification } = useNotification();
+    const [sortBy, setSortBy] = useState<string>("");
+
+    // Report Modal States
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [reportType, setReportType] = useState<"post" | "comment" | null>(
+        null
+    );
+    const [reportCommentId, setReportCommentId] = useState<string | null>(null);
+    const [reportExplanation, setReportExplanation] = useState<string>("");
 
     // Function to fetch user names for each comment
     const fetchCommentsWithUserNames = async (comments: Comment[]) => {
@@ -91,7 +100,7 @@ const BlogPostPage = () => {
                 await fetchCommentsWithUserNames(postData.comments || []);
             } catch (err: any) {
                 if (err.status == 404) {
-                    showNotification("Blogpost does not exit", "error");
+                    showNotification("Blogpost does not exist", "error");
                     router.push("/blogposts");
                 }
                 console.error("Failed to fetch blog post:", err);
@@ -103,6 +112,22 @@ const BlogPostPage = () => {
         fetchBlogPost();
     }, [id]);
 
+    const fetchSortedComments = async () => {
+        try {
+            const { data } = await api.get(
+                `/comments?postId=${id}&sortBy=${sortBy}`
+            );
+            const sortedComments = data.comments;
+            console.log("Sorted comments:", sortedComments);
+            setComments(sortedComments);
+        } catch (error) {
+            console.error("Failed to fetch sorted comments:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSortedComments();
+    }, [sortBy, comments]);
     if (!blogPost) {
         return <LoadingScreen />;
     }
@@ -197,36 +222,93 @@ const BlogPostPage = () => {
         }
     };
 
-    // Function to handle reporting the blog post
-    const handleReport = async () => {
-        if (!user) {
-            router.push("/auth/login");
-            return;
-        }
-        try {
-            const response = await api.post(
-                `/blogposts/${blogPost.id}/reports`,
-                {
-                    explanation: "This post is inappropriate.",
-                }
-            );
-            if (response.status === 200) {
-                showNotification(
-                    "Report submitted successfully. Thank you for your feedback.",
-                    "success"
-                );
-            } else {
-                showNotification(
-                    "Failed to report the post. Please try again later.",
-                    "error"
-                );
-            }
-        } catch (error) {
+    // Function to open the report modal
+    const handleOpenReportModal = (
+        type: "post" | "comment",
+        commentId?: string
+    ) => {
+        setReportType(type);
+        setReportCommentId(commentId || null);
+        setReportExplanation("");
+        setShowReportModal(true);
+    };
+
+    // Function to close the report modal
+    const handleCloseReportModal = () => {
+        setShowReportModal(false);
+        setReportType(null);
+        setReportCommentId(null);
+        setReportExplanation("");
+    };
+
+    // Function to submit the report
+    const handleSubmitReport = async () => {
+        if (!reportExplanation.trim()) {
             showNotification(
-                "An error occurred while reporting the post. Please try again later.",
+                "Please provide an explanation for the report.",
                 "error"
             );
+            return;
         }
+
+        try {
+            if (reportType === "post" && blogPost) {
+                const response = await api.post(
+                    `/blogposts/${blogPost.id}/reports`,
+                    {
+                        explanation: reportExplanation,
+                    }
+                );
+                if (response.status === 200) {
+                    showNotification(
+                        "Report submitted successfully. Thank you for your feedback.",
+                        "success"
+                    );
+                } else {
+                    showNotification(
+                        "Failed to report the post. Please try again later.",
+                        "error"
+                    );
+                }
+            } else if (reportType === "comment" && reportCommentId) {
+                const response = await api.post(
+                    `/comments/${reportCommentId}/reports`,
+                    {
+                        explanation: reportExplanation,
+                    }
+                );
+                if (response.status === 200) {
+                    showNotification(
+                        "Comment report submitted successfully. Thank you for your feedback.",
+                        "success"
+                    );
+                } else {
+                    showNotification(
+                        "Failed to report the comment. Please try again later.",
+                        "error"
+                    );
+                    console.log(response);
+                }
+            }
+            handleCloseReportModal();
+        } catch (err: any) {
+            showNotification(
+                err?.response?.data?.error ||
+                    `Failed to report the ${reportType}. Please try again later.`,
+                "error"
+            );
+            console.error(`Error reporting ${reportType}:`, err);
+        }
+    };
+
+    // Function to handle reporting the blog post
+    const handleReport = () => {
+        handleOpenReportModal("post");
+    };
+
+    // Function to handle reporting a comment
+    const handleReportComment = (commentId: string) => {
+        handleOpenReportModal("comment", commentId);
     };
 
     // Function to handle blog post deletion
@@ -253,37 +335,6 @@ const BlogPostPage = () => {
                 "An error occurred while deleting the blog post. Please try again later.",
                 "error"
             );
-        }
-    };
-
-    // Function to handle reporting a comment
-    const handleReportComment = async (commentId: string) => {
-        if (!user) {
-            router.push("/auth/login");
-            return;
-        }
-        try {
-            const response = await api.post(`/comments/${commentId}/reports`, {
-                explanation: "This comment is inappropriate.",
-            });
-            if (response.status === 200) {
-                showNotification(
-                    "Comment report submitted successfully. Thank you for your feedback.",
-                    "success"
-                );
-            } else {
-                showNotification(
-                    "Failed to report the comment. Please try again later.",
-                    "error"
-                );
-                console.error("Failed to report comment");
-            }
-        } catch (error) {
-            showNotification(
-                "An error occurred while reporting the comment. Please try again later.",
-                "error"
-            );
-            console.error("Error reporting comment:", error);
         }
     };
 
@@ -396,7 +447,7 @@ const BlogPostPage = () => {
                                             }
                                         >
                                             <FaThumbsUp />{" "}
-                                            <span>({comment.upvotes})</span>
+                                            <span>{comment.upvotes}</span>
                                         </button>
                                         <button
                                             className="text-red-600 hover:text-red-700 transition duration-300 flex items-center space-x-1"
@@ -408,7 +459,7 @@ const BlogPostPage = () => {
                                             }
                                         >
                                             <FaThumbsDown />{" "}
-                                            <span>({comment.downvotes})</span>
+                                            <span>{comment.downvotes}</span>
                                         </button>
                                         <button
                                             className="text-yellow-600 hover:text-yellow-700 transition duration-300"
@@ -429,6 +480,7 @@ const BlogPostPage = () => {
                     )}
                 </div>
             </div>
+
             {/* Delete Confirmation Modal */}
             {showDeleteModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -452,6 +504,40 @@ const BlogPostPage = () => {
                                 onClick={handleDeleteBlogPost}
                             >
                                 Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Report Modal */}
+            {showReportModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg max-w-md w-full">
+                        <h2 className="text-lg font-bold mb-4">
+                            Report {reportType === "post" ? "Post" : "Comment"}
+                        </h2>
+                        <textarea
+                            className="w-full p-4 rounded-md border border-gray-300 dark:border-gray-700 mb-4 dark:bg-gray-800 dark:text-white"
+                            rows={4}
+                            placeholder="Please provide an explanation for your report..."
+                            value={reportExplanation}
+                            onChange={(e) =>
+                                setReportExplanation(e.target.value)
+                            }
+                        />
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded"
+                                onClick={handleCloseReportModal}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                                onClick={handleSubmitReport}
+                            >
+                                Submit Report
                             </button>
                         </div>
                     </div>
