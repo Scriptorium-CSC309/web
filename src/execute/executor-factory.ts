@@ -9,8 +9,8 @@ import { TSExecutor } from "./ts-executor";
 import { CSharpExecutor } from "./CSharp-executor";
 import { RubyExecutor } from "./ruby-executor";
 import { PHPExecutor } from "./php-executor";
-import { ObjectiveCExecutor } from "./objectivec-executor";
 import { GoExecutor } from "./go-executor";
+
 export class ExecutorFactory {
     /**
      * Return an Executor of the given language, or null if the language is not supported.
