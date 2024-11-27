@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
+import { SORT_BY_OPTIONS } from '@/constants';
 
 interface BlogPost {
   id: string;
@@ -26,6 +27,7 @@ const BlogPostsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('');
 
   // Fetch blog posts from the API
   useEffect(() => {
@@ -178,9 +180,29 @@ const BlogPostsPage: React.FC = () => {
         >
           Create New Blog Post
         </button>
+        <select
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === SORT_BY_OPTIONS.valued) {
+              setSortBy(SORT_BY_OPTIONS.valued);
+            } else if (value === 'controversial') {
+              setSortBy(SORT_BY_OPTIONS.controversial);
+            }
+            }}
+            className="ml-4 w-1/20 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          >
+          <option value="">Sort by...</option>
+          <option value="valued">Sort by Valued</option>
+          <option value="controversial">Sort by Controversial</option>
+        </select>
       </div>
 
+<<<<<<< HEAD
       {/* Tags */}
+=======
+
+      {/* Popular Categories */}
+>>>>>>> b552449 (blogposts modifications)
       <div className="mb-10">
         <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">
           Tags
