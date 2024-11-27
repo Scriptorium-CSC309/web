@@ -129,8 +129,9 @@ const BlogPostPage = () => {
     try {
       const response = await api.post(`/blogposts/${blogPost.id}/vote`, { type });
       if (response.status === 200) {
+        const { upvotes, downvotes } = response.data;
         setBlogPost((prevPost) =>
-          prevPost ? { ...prevPost, upvotes: response.data.upvotes, downvotes: response.data.downvotes } : prevPost
+          prevPost ? { ...prevPost, upvotes, downvotes } : prevPost
         );
       } else {
         console.error('Failed to vote on blog post');
@@ -149,10 +150,10 @@ const BlogPostPage = () => {
     try {
       const response = await api.post(`/comments/${commentId}/vote`, { type });
       if (response.status === 200) {
-        const updatedComment: Comment = response.data;
+        const { upvotes, downvotes } = response.data;
         setComments((prevComments) =>
           prevComments.map((comment) =>
-            comment.id === updatedComment.id ? { ...updatedComment, user: comment.user } : comment
+            comment.id === commentId ? { ...comment, upvotes, downvotes } : comment
           )
         );
       } else {
