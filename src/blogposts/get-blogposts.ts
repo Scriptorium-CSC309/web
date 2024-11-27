@@ -21,7 +21,7 @@ const getBlogPostsSchema = Joi.object({
     pageSize: Joi.number().integer().min(1).max(100).default(10),
     search: Joi.string().allow(""),
     tags: Joi.array().single().items(Joi.string()),
-    sortBy: Joi.string().valid("valued", "controversial"),
+    sortBy: Joi.string().valid("valued", "controversial", ''),
 });
 
 async function handler(
