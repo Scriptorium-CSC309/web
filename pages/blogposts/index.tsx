@@ -18,7 +18,7 @@ interface BlogPost {
   user: {
     id: number;
     name: string;
-  }
+  };
 }
 
 interface Author {
@@ -39,12 +39,15 @@ const BlogPostsPage: React.FC = () => {
   const [sortBy, setSortBy] = useState("");
   const [showMyBlogPosts, setshowMyBlogPosts] = useState(false);
   const userContext = useContext(UserStateContext);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Fetch blog posts from the API
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
         const params = {
+          page,
           sortBy,
           showMyBlogPosts,
         };
@@ -60,6 +63,7 @@ const BlogPostsPage: React.FC = () => {
           setBlogPosts([]);
           setFilteredPosts([]);
         }
+        setTotalPages(Math.ceil(data.total / data.pageSize));
       } catch (err: any) {
         console.error("Error fetching blog posts:", err.message);
         setBlogPosts([]);
@@ -70,7 +74,7 @@ const BlogPostsPage: React.FC = () => {
     };
 
     fetchBlogPosts();
-  }, [sortBy, showMyBlogPosts]);
+  }, [sortBy, showMyBlogPosts, page]);
 
   // Fetch author names for each blog post
   // useEffect(() => {
@@ -209,33 +213,31 @@ const BlogPostsPage: React.FC = () => {
           <option value="controversial">Sort by Controversial</option>
         </select>
         {userContext && (
-        <button
-          onClick={() => setshowMyBlogPosts((prev) => !prev)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium ml-4 ${
-            showMyBlogPosts
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-200"
-          }`}
-        >
-          <FaUser />
-          {showMyBlogPosts ? (
-            <>
-              <span className="block md:hidden">Mine</span>
-              <span className="hidden md:block">My Templates</span>
-            </>
-          ) : (
-            <>
-              <span className="block md:hidden">All</span>
-              <span className="hidden md:block">All Templates</span>
-            </>
-          )}
-        </button>
-      )}
+          <button
+            onClick={() => setshowMyBlogPosts((prev) => !prev)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium ml-4 ${
+              showMyBlogPosts
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+            }`}
+          >
+            <FaUser />
+            {showMyBlogPosts ? (
+              <>
+                <span className="block md:hidden">Mine</span>
+                <span className="hidden md:block">My Blogposts</span>
+              </>
+            ) : (
+              <>
+                <span className="block md:hidden">All</span>
+                <span className="hidden md:block">All Blogposts</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Show My Blog Posts button */}
-
-
 
       {/* Tags */}
       <div className="mb-10">
@@ -319,6 +321,26 @@ const BlogPostsPage: React.FC = () => {
             <p>No blog posts found.</p>
           </div>
         )}
+      </div>
+      {/* Pagination */}
+      <div className="flex justify-center items-center mt-6 gap-4">
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+          className="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-200 rounded-md disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span>
+          Page {page} of {totalPages}
+        </span>
+        <button
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+          className="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-200 rounded-md disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
