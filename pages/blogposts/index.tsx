@@ -197,12 +197,7 @@ const BlogPostsPage: React.FC = () => {
         </select>
       </div>
 
-<<<<<<< HEAD
       {/* Tags */}
-=======
-
-      {/* Popular Categories */}
->>>>>>> b552449 (blogposts modifications)
       <div className="mb-10">
         <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">
           Tags
