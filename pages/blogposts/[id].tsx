@@ -72,7 +72,7 @@ const BlogPostPage = () => {
 
   useEffect(() => {
     fetchSortedComments();
-  }, [sortBy]);
+  }, [sortBy, comments]);
 
   // Function to fetch blog post data along with comments
   const fetchBlogPost = async () => {
