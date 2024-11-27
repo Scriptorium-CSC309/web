@@ -10,6 +10,8 @@ interface BlogPost {
   userId: string;
   postedAt: string;
   tags: { id: string; name: string }[];
+  upvotes: number;
+  downvotes: number;
 }
 
 interface Author {
@@ -33,7 +35,8 @@ const BlogPostsPage: React.FC = () => {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const res = await fetch('/api/blogposts/');
+
+        const res = await fetch(`/api/blogposts?sortBy=${sortBy}`);
         if (!res.ok) {
           throw new Error('Failed to fetch blog posts');
         }
@@ -60,7 +63,7 @@ const BlogPostsPage: React.FC = () => {
     };
 
     fetchBlogPosts();
-  }, []);
+  }, [sortBy]);
 
   // Fetch author names for each blog post
   useEffect(() => {
@@ -187,6 +190,8 @@ const BlogPostsPage: React.FC = () => {
               setSortBy(SORT_BY_OPTIONS.valued);
             } else if (value === 'controversial') {
               setSortBy(SORT_BY_OPTIONS.controversial);
+            } else {
+              setSortBy('');
             }
             }}
             className="ml-4 w-1/20 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
@@ -234,6 +239,18 @@ const BlogPostsPage: React.FC = () => {
               <h3 className="text-2xl font-bold mb-3 text-blue-600 dark:text-blue-400">
                 {post.title}
               </h3>
+              <div className="absolute top-4 right-4 flex gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600 dark:text-green-400 font-bold">
+                    &#x1F44D; {post.upvotes}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-red-600 dark:text-red-400 font-bold">
+                    &#x1F44E; {post.downvotes}
+                  </span>
+                </div>
+              </div>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 {post.description}
               </p>
