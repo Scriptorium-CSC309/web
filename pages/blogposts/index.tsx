@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import { SORT_BY_OPTIONS } from '@/constants';
+import api from "@/frontend/utils/api";
 
 interface BlogPost {
   id: string;
@@ -35,13 +36,10 @@ const BlogPostsPage: React.FC = () => {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-
-        const res = await fetch(`/api/blogposts?sortBy=${sortBy}`);
-        if (!res.ok) {
-          throw new Error('Failed to fetch blog posts');
+        const params = {
+          sortBy,
         }
-        const data = await res.json();
-
+        const { data } = await api.get("/blogposts", { params });
         if (Array.isArray(data.posts)) {
           setBlogPosts(data.posts);
           setFilteredPosts(data.posts);
