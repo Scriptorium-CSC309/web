@@ -10,6 +10,7 @@ import {
     SERVER_ERROR_MSG,
 } from "@/constants";
 import { user } from "@nextui-org/react";
+import { Prisma } from "@prisma/client";
 
 type Error = {
     error: string;
@@ -25,6 +26,11 @@ type CommentWithReportCount = {
     upvotes: number;
     downvotes: number;
     reportCount: number;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    };
 };
 
 type SuccessResponse = {
@@ -42,6 +48,7 @@ const querySchema = Joi.object({
         .max(MAX_PAGE_SIZE)
         .default(PAGE_SIZE),
     sort: Joi.string().valid("asc", "desc").default("desc"), // sort order based on reportCount
+    search: Joi.string().optional().allow(''), // optional search parameter for comment content
 });
 
 async function handler(
@@ -61,15 +68,24 @@ async function handler(
         return res.status(400).json({ error: queryError.details[0].message });
     }
 
-    const { page, pageSize, sort } = query;
+    const { page, pageSize, sort, search } = query;
 
     const skip = (page - 1) * pageSize;
     const take = pageSize;
+
+    let where: Prisma.CommentWhereInput = {};
+        if (search) {
+            where.OR = [
+                { content: { contains: search } },
+                { user: { name: { contains: search } } },
+            ];
+        }
 
     try {
         // Fetch comments with at least one report, include count of reports
         const [comments, total] = await prisma.$transaction([
             prisma.comment.findMany({
+                where,
                 select: {
                     id: true,
                     content: true,
@@ -82,7 +98,7 @@ async function handler(
                     _count: {
                         select: { commentReports: true },
                     },
-                    user: true
+                    user: true,
                 },
                 orderBy: {
                     commentReports: {
@@ -92,7 +108,11 @@ async function handler(
                 skip: skip,
                 take: take,
             }),
-            prisma.comment.count(),
+            prisma.comment.count(
+                {
+                    where: where,
+                }
+            ),
         ]);
 
         // Map comments to include reportCount
@@ -107,7 +127,7 @@ async function handler(
                 upvotes: comment.upvotes,
                 downvotes: comment.downvotes,
                 reportCount: comment._count.commentReports,
-                user: comment.user
+                user: comment.user,
             })
         );
 
