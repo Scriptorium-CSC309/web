@@ -11,6 +11,7 @@ export const LANGUAGES = [
   "Go"
 ];
 export const NUM_AVATARS = 5;
+export const ITEMS_PER_PAGE = 10;
 export const VALID_PHONE_NUMBER = /^\+?[1-9]\d{1,14}$/; // E.164 phone format
 export const MAX_CHARS_TITLE_DESCRIPTION = 500;
 export const MAX_CHARS_CONTENT = 10000;
@@ -25,6 +26,7 @@ export const SERVER_ERROR_MSG = "Internal Server Error";
 export const EXECUTION_MEMORY_LIMIT = 512; // in MB
 export const EXECUTION_TIME_LIMIT = 20; // in seconds
 export const TS_CONFIG_FILE = "tsconfig.json";
+export const SORT_BY_OPTIONS = { valued: "valued", controversial: "controversial" };
 export const TS_CONFIG_CONTENT = `{
   "compilerOptions": {
     "target": "es6",
