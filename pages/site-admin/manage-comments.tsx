@@ -17,13 +17,16 @@ const ManageComments = () => {
   const [loading, setLoading] = useState(true);
   const [update, setUpdate] = useState(false);
   const [comments, setComments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
 
   const fetchComments = async () => {
     setLoading(true);
     const params = {
-      page: 1,
+      page: page,
       pageSize: ITEMS_PER_PAGE,
       sort: "desc",
+      search: searchQuery
     };
     try {
       const { data } = await api.get("/comments/admin-get-all", { params });
@@ -36,7 +39,9 @@ const ManageComments = () => {
     }
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (searchQuery: string, page: number) => {
+    setSearchQuery(searchQuery);
+    setPage(page);
     setUpdate((prev) => !prev);
   }
 
