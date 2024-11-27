@@ -8,10 +8,18 @@ import api from "@/frontend/utils/api";
 import { NUM_AVATARS } from "@/constants";
 import { HiOutlinePencil } from "react-icons/hi";
 import withAuth from "@/frontend/utils/auth";
+import { useRouter } from "next/router";
+import LoadingScreen from "@/frontend/components/LoadingScreen";
 
 const ProfilePage = () => {
     const userDispatch = useContext(UserDispatchContext);
-    const user = useContext(UserStateContext)!;
+    const user = useContext(UserStateContext);
+    const router = useRouter();
+
+    if (!user) {
+        router.push("/auth/login");
+        return <LoadingScreen />;
+    }
 
     const { isAdmin, id, ...initialFormData } = user;
     const [formData, setFormData] = useState(initialFormData);
@@ -109,23 +117,51 @@ const ProfilePage = () => {
                                 </label>
                                 <div className="relative">
                                     <input
-                                        ref={inputRefs[field as keyof typeof inputRefs]}
-                                        type={field === "phoneNumber" ? "tel" : "text"}
+                                        ref={
+                                            inputRefs[
+                                                field as keyof typeof inputRefs
+                                            ]
+                                        }
+                                        type={
+                                            field === "phoneNumber"
+                                                ? "tel"
+                                                : "text"
+                                        }
                                         id={field}
-                                        value={formData[field as keyof typeof formData]}
+                                        value={
+                                            formData[
+                                                field as keyof typeof formData
+                                            ]
+                                        }
                                         onChange={handleChange}
-                                        disabled={!editableFields[field as keyof typeof editableFields]}
-                                        onBlur={() => handleBlur(field as keyof typeof editableFields)}
+                                        disabled={
+                                            !editableFields[
+                                                field as keyof typeof editableFields
+                                            ]
+                                        }
+                                        onBlur={() =>
+                                            handleBlur(
+                                                field as keyof typeof editableFields
+                                            )
+                                        }
                                         className={`w-full px-4 py-3 pr-10 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200 border ${
-                                            editableFields[field as keyof typeof editableFields]
+                                            editableFields[
+                                                field as keyof typeof editableFields
+                                            ]
                                                 ? "border-blue-500 focus:ring-blue-500 focus:border-blue-500"
                                                 : "border-gray-300 dark:border-gray-600"
                                         }`}
                                     />
-                                    {!editableFields[field as keyof typeof editableFields] && (
+                                    {!editableFields[
+                                        field as keyof typeof editableFields
+                                    ] && (
                                         <button
                                             type="button"
-                                            onClick={() => toggleEditableField(field as keyof typeof editableFields)}
+                                            onClick={() =>
+                                                toggleEditableField(
+                                                    field as keyof typeof editableFields
+                                                )
+                                            }
                                             className="absolute inset-y-0 right-0 flex items-center px-2 text-sm font-medium text-blue-600 dark:text-blue-400"
                                         >
                                             <HiOutlinePencil className="h-5 w-5" />
@@ -236,4 +272,4 @@ const ProfilePage = () => {
     );
 };
 
-export default withAuth(ProfilePage);
+export default ProfilePage;
