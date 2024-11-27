@@ -1,0 +1,18 @@
+  services:
+    app:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      image: app-image
+      volumes:
+        - app-node-modules:/app/node_modules
+        # Mount the Docker socket to allow Docker commands inside the container
+        - /var/run/docker.sock:/var/run/docker.sock
+      ports:
+        - "${PORT:-3000}:3000"
+      env_file:
+        - .env
+      command: ["npm", "run", "start"]
+
+  volumes:
+    app-node-modules:
