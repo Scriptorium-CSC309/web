@@ -26,6 +26,7 @@ export const SERVER_ERROR_MSG = "Internal Server Error";
 export const EXECUTION_MEMORY_LIMIT = 512; // in MB
 export const EXECUTION_TIME_LIMIT = 20; // in seconds
 export const TS_CONFIG_FILE = "tsconfig.json";
+export const SORT_BY_OPTIONS = { valued: "valued", controversial: "controversial" };
 export const TS_CONFIG_CONTENT = `{
   "compilerOptions": {
     "target": "es6",
