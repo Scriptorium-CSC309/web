@@ -68,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ onHeightChange }) => {
                             Code
                         </Link>
                         <Link
-                            href="/discussions"
+                            href="/blogposts"
                             className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
                         >
                             Discussions

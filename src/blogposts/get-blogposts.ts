@@ -21,7 +21,8 @@ const getBlogPostsSchema = Joi.object({
     pageSize: Joi.number().integer().min(1).max(100).default(10),
     search: Joi.string().allow(""),
     tags: Joi.array().single().items(Joi.string()),
-    sortBy: Joi.string().valid("valued", "controversial"),
+    sortBy: Joi.string().valid("valued", "controversial", ''),
+    showMyBlogPosts: Joi.boolean().default(false),
 });
 
 async function handler(
@@ -44,6 +45,11 @@ async function handler(
 
         const userId = req.user ? Number(req.user.userId) : null;
 
+        if (userId == null && value.showMyBlogPosts) {
+            res.status(403).json({ error: "Unauthenticated user cannot own blogposts" });
+            return;
+        }
+
         // Construct the 'where' clause based on the filters
     let where: Prisma.BlogPostWhereInput;
         if (userId !== null) {
@@ -55,6 +61,9 @@ async function handler(
                     ...(isAdmin ? [{ isHidden: true }] : []),
                 ],
             };
+            if (value.showMyBlogPosts) {
+                where.userId = userId;
+            }
         } else {
             // If not authenticated, only fetch comments that are not hidden
             where = {
@@ -64,11 +73,14 @@ async function handler(
 
         // Handle search filtering
         if (search) {
-            where.OR = [
+            if (!where.OR) {
+                where.OR = [];
+            }
+            where.OR.push(
                 { title: { contains: search } },
                 { content: { contains: search } },
                 { description: { contains: search } },
-            ];
+            )
         }
 
         // Handle tags filtering

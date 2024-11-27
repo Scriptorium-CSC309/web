@@ -9,6 +9,7 @@ import {
     PAGE_SIZE,
     SERVER_ERROR_MSG,
 } from "@/constants";
+import { Prisma } from "@prisma/client";
 
 type Error = {
     error: string;
@@ -42,6 +43,7 @@ const querySchema = Joi.object({
         .max(MAX_PAGE_SIZE)
         .default(PAGE_SIZE),
     sort: Joi.string().valid("asc", "desc").default("dsc"),
+    search: Joi.string().optional().allow(''), // optional search parameter for blog post content
 });
 
 async function handler(
@@ -62,14 +64,23 @@ async function handler(
     }
 
     // Handle pagination and sorting
-    const { page, pageSize, sort } = query;
+    const { page, pageSize, sort, search } = query;
     const skip = (page - 1) * pageSize;
     const take = pageSize;
+
+    let where: Prisma.BlogPostWhereInput = {};
+    if (search) {
+        where.OR = [
+            { title: { contains: search } },
+            { content: { contains: search } },
+            { description: { contains: search } },
+        ];
+    }
 
     try {
         const [blogPosts, total] = await prisma.$transaction([
             prisma.blogPost.findMany({
-                where: {},
+                where,
                 include: {
                     tags: {
                         select: { name: true }, // Assuming tags have a `name` field
@@ -84,7 +95,7 @@ async function handler(
                 skip,
                 take,
             }),
-            prisma.blogPost.count(), // Count all blog posts
+            prisma.blogPost.count( { where }), // Count all blog posts
             prisma.blogPost.count({
                 where: {
                     blogPostReports: {

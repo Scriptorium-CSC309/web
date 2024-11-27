@@ -1,8 +1,10 @@
 import deleteBlogPostInteractor from "@/src/blogposts/[id]/delete-blogpost";
 import editBlogPostInteractor from "@/src/blogposts/[id]/edit-blogpost";
 import hideBlogPostInteractor from "@/src/blogposts/[id]/hide-blogpost";
+import  getBlogPostById from "@/src/blogposts/[id]/get-blogpost";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { AuthenticatedRequest } from "@/src/auth/utils";
+import { get } from "http";
 
 /**
  * @swagger
@@ -138,8 +140,13 @@ function handler(req: NextApiRequest, res: NextApiResponse) {
         return editBlogPostInteractor(req as AuthenticatedRequest, res);
     } else if (req.method == "PATCH") {
         return hideBlogPostInteractor(req as AuthenticatedRequest, res);
-    } else {
-        res.setHeader("Allow", ["DELETE", "PUT"]);
+    }
+    // get blogpost by id
+    else if (req.method === "GET") {
+        return getBlogPostById(req,res);
+    } 
+    else {
+        res.setHeader("Allow", ["DELETE", "PUT", "PATCH", "GET"]);
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
