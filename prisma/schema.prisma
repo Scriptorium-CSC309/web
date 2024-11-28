@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// uncomment for prod
+// datasource db {
+//   provider = "postgres"
+//   url      = env("DATABASE_URL")
+// }
+
 model User {
   id          Int     @id @default(autoincrement())
   name        String
@@ -49,8 +55,8 @@ model BlogPostVote {
   type        String   
   createdAt   DateTime  @default(now())
 
-  user        User      @relation(fields: [userId], references: [id])
-  blogPost    BlogPost  @relation(fields: [blogPostId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blogPost    BlogPost  @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
 
   @@unique([userId, blogPostId])
 }
@@ -79,7 +85,7 @@ model CommentVote {
   createdAt DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id])
-  comment Comment @relation(fields: [commentId], references: [id])
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId]) // Ensures one vote per user per comment
 }
@@ -91,8 +97,8 @@ model BlogPostReport {
   explanation String
   reportedAt  DateTime @default(now())
 
-  reporter User     @relation(fields: [reporterId], references: [id])
-  blogPost BlogPost @relation(fields: [blogPostId], references: [id])
+  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  blogPost    BlogPost @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
 
   @@index([blogPostId])
 }
@@ -105,7 +111,7 @@ model CommentReport {
   reportedAt  DateTime @default(now())
 
   reporter User    @relation(fields: [reporterId], references: [id])
-  comment  Comment @relation(fields: [commentId], references: [id])
+  comment  Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@index([commentId])
 }

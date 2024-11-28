@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Editor } from "@monaco-editor/react";
 import Avatar from "@/frontend/components/Avatar";
-import { FaCodeBranch, FaTrashAlt } from "react-icons/fa";
+import { FaCodeBranch, FaEdit, FaTrashAlt } from "react-icons/fa";
 import api from "@/frontend/utils/api";
 import { languageToMonacoLanguage } from "@/frontend/utils/language-to-monaco-language";
 import { useTheme } from "next-themes";
@@ -126,13 +126,24 @@ const CodeTemplatePage = () => {
                     </div>
                     <div className="flex items-center gap-4">
                         {user && user.id === templateData.user.id && (
-                            <button
-                                onClick={() => setShowModal(true)}
-                                className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                            >
-                                <FaTrashAlt />
-                                <span>Delete</span>
-                            </button>
+                            <>
+                                <button
+                                    onClick={() =>
+                                        router.push(`/code?templateId=${id}`)
+                                    }
+                                    className="flex items-center gap-2 px-5 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+                                >
+                                    <FaEdit />
+                                    <span>Edit</span>
+                                </button>
+                                <button
+                                    onClick={() => setShowModal(true)}
+                                    className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                >
+                                    <FaTrashAlt />
+                                    <span>Delete</span>
+                                </button>
+                            </>
                         )}
                         <button
                             onClick={handleFork}

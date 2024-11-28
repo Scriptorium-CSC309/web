@@ -7,7 +7,6 @@ import {
     getWorkDir,
 } from "./utils";
 import { EXECUTION_MEMORY_LIMIT, EXECUTION_TIME_LIMIT, TS_CONFIG_FILE, TS_CONFIG_CONTENT } from "../../constants";
-import { getWrapperProps } from "gatsby-plugin-image/dist/src/components/hooks";
 
 const TS_IMAGE_TAG = process.env.TS_IMAGE_TAG!;
 
