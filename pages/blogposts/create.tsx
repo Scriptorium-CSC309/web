@@ -4,6 +4,7 @@ import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import withAuth from '@/frontend/utils/auth'; // Adjust the path as needed
 import { getAccessToken } from '@/frontend/utils/token-storage';
+import api from '@/frontend/utils/api';
 
 const CreateBlogPostPage: React.FC = () => {
   const router = useRouter();
@@ -12,7 +13,6 @@ const CreateBlogPostPage: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
 
   // Tags state
   const [tags, setTags] = useState<string[]>([]);
@@ -62,21 +62,15 @@ const CreateBlogPostPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/blogposts/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Include Bearer token
-        },
-        body: JSON.stringify({ title, description, content, category, tags }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create a new blog post.');
+      const params = {
+        title,
+        description,
+        content,
+        tags,
       }
 
-      const data = await response.json();
+      const { data } = await api.post("/blogposts", params );
+
       console.log('Blog post created:', data);
 
       // Set success state to true to display the success message
@@ -86,7 +80,6 @@ const CreateBlogPostPage: React.FC = () => {
       setTitle('');
       setDescription('');
       setContent('');
-      setCategory('');
       setTags([]);
 
       // Redirect to /blogposts after a short delay (e.g., 3 seconds)
