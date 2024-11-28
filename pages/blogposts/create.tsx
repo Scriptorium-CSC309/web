@@ -54,7 +54,6 @@ const CreateBlogPostPage: React.FC = () => {
 
     if (!token) {
       setError('You must be logged in to create a blog post.');
-
       return;
     }
 
@@ -185,7 +184,6 @@ const CreateBlogPostPage: React.FC = () => {
             required
           />
         </div>
-
         
         {/* Tags Field */}
         <div className="mb-6">

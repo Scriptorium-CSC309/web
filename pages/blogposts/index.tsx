@@ -42,6 +42,7 @@ const BlogPostsPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+
   // Fetch blog posts from the API
   useEffect(() => {
     const fetchBlogPosts = async () => {

@@ -35,4 +35,6 @@ import prisma from '@/prisma'; // Path to your Prisma client
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
+
 export default getBlogPostById;
+
