@@ -5,6 +5,7 @@ import api from "@/frontend/utils/api";
 import { StateContext as UserStateContext } from "@/frontend/contexts/UserContext";
 import { useNotification } from "@/frontend/contexts/NotificationContext";
 import LoadingScreen from "@/frontend/components/LoadingScreen";
+import { SORT_BY_OPTIONS } from "@/constants";
 
 // Define types for BlogPost and Comment
 interface BlogPost {
@@ -78,6 +79,18 @@ const BlogPostPage = () => {
         setComments(updatedComments);
     };
 
+    const fetchSortedComments = async () => {
+        try {
+          const { data } = await api.get(`/comments?postId=${id}&sortBy=${sortBy}`);
+          const sortedComments = data.comments;
+          console.log('Sorted comments:', sortedComments);
+          setComments(sortedComments);
+        } catch (error) {
+          console.error('Failed to fetch sorted comments:', error);
+        }
+      }
+
+
     // Function to fetch blog post data along with comments
     const fetchBlogPost = async () => {
         if (id) {
@@ -111,19 +124,6 @@ const BlogPostPage = () => {
     useEffect(() => {
         fetchBlogPost();
     }, [id]);
-
-    const fetchSortedComments = async () => {
-        try {
-            const { data } = await api.get(
-                `/comments?postId=${id}&sortBy=${sortBy}`
-            );
-            const sortedComments = data.comments;
-            console.log("Sorted comments:", sortedComments);
-            setComments(sortedComments);
-        } catch (error) {
-            console.error("Failed to fetch sorted comments:", error);
-        }
-    };
 
     useEffect(() => {
         fetchSortedComments();
@@ -395,21 +395,37 @@ const BlogPostPage = () => {
 
                 {/* Add Comment Section */}
                 <div className="mb-8">
-                    <textarea
-                        className="w-full p-4 rounded-md border border-gray-300 dark:border-gray-700 mb-4 dark:bg-gray-800 dark:text-white"
-                        rows={4}
-                        placeholder="Add a comment..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                    />
-                    <button
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow-lg flex items-center space-x-2"
-                        onClick={handleAddComment}
-                    >
-                        <FaPlus />
-                        <span>Add Comment</span>
-                    </button>
-                </div>
+          <textarea
+            className="w-full p-4 rounded-md border border-gray-300 dark:border-gray-700 mb-4 dark:bg-gray-800 dark:text-white"
+            rows={4}
+            placeholder="Add a comment..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow-lg"
+            onClick={handleAddComment}
+          >
+            Add Comment
+          </button>
+          <select
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === SORT_BY_OPTIONS.valued) {
+              setSortBy(SORT_BY_OPTIONS.valued);
+            } else if (value === "controversial") {
+              setSortBy(SORT_BY_OPTIONS.controversial);
+            } else {
+              setSortBy("");
+            }
+          }}
+          className="ml-4 w-1/20 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+        >
+          <option value="">Sort by Time</option>
+          <option value="valued">Sort by Valued</option>
+          <option value="controversial">Sort by Controversial</option>
+        </select>
+        </div>
 
                 {/* Comments Section */}
                 <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md transition duration-300">

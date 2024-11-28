@@ -20,7 +20,7 @@ const getCommentsSchema = Joi.object({
     page: Joi.number().integer().min(1).default(1),
     pageSize: Joi.number().integer().min(1).max(100).default(10),
     postId: Joi.number().integer().required(),
-    sortBy: Joi.string().valid("valued", "controversial").optional(),
+    sortBy: Joi.string().valid("valued", "controversial", "").optional(),
 });
 
 async function handler(
